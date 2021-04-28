@@ -93,10 +93,10 @@ function UserInfo({ settings, availableVai, vaiStaked, vaiReward }) {
     setIsLoading(true);
     await methods
       .send(appContract.methods.claim, [], settings.selectedAddress)
-      .then(res => {
+      .then(() => {
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsLoading(false);
       });
   };

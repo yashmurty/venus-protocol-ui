@@ -232,9 +232,8 @@ function Proposals({
           )}
         </div>
         <div className="body">
-          {isLoadingProposal ? (
-            <LoadingSpinner />
-          ) : proposals && proposals.length !== 0 ? (
+          {isLoadingProposal && <LoadingSpinner />}
+          {!isLoadingProposal && proposals && proposals.length !== 0 ? (
             proposals.map(item => {
               return (
                 <Proposal

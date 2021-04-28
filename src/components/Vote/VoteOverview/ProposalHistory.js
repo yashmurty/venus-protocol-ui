@@ -140,9 +140,9 @@ function ProposalHistory({ proposalInfo }) {
               title={
                 proposalInfo.state === 'Canceled' ||
                 proposalInfo.state === 'Defeated'
-                  ? proposalInfo.state === 'Defeated'
-                    ? 'Failed'
-                    : 'Canceled'
+                  ? `${
+                      proposalInfo.state === 'Defeated' ? 'Failed' : 'Canceled'
+                    }`
                   : `${
                       proposalInfo.state === 'Succeeded'
                         ? 'Succeeded'
@@ -152,9 +152,13 @@ function ProposalHistory({ proposalInfo }) {
               description={
                 proposalInfo.endTimestamp
                   ? moment(proposalInfo.endTimestamp * 1000).format('LLL')
-                  : proposalInfo.cancelTimestamp
-                  ? moment(proposalInfo.cancelTimestamp * 1000).format('LLL')
-                  : ''
+                  : `${
+                      proposalInfo.cancelTimestamp
+                        ? moment(proposalInfo.cancelTimestamp * 1000).format(
+                            'LLL'
+                          )
+                        : ''
+                    }`
               }
               icon={
                 <Icon

@@ -310,7 +310,6 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           toast.error({
             title: `You are currently visiting the Binance Testnet Smart Chain Network. Please change your metamask to access the Binance Smart Chain Main Network`
           });
-          return false;
         }
         if (netId === 56 && process.env.REACT_APP_ENV === 'dev') {
           toast.error({
@@ -331,7 +330,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
   useEffect(() => {
     if (window.ethereum) {
-      window.addEventListener('load', event => {
+      window.addEventListener('load', () => {
         checkNetwork();
       });
     }
@@ -603,7 +602,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     for (
       let index = 0;
       index < Object.values(constants.CONTRACT_TOKEN_ADDRESS).length;
-      index++
+      index += 1
     ) {
       const item = Object.values(constants.CONTRACT_TOKEN_ADDRESS)[index];
       if (!settings.decimals[item.id]) {

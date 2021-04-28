@@ -6,11 +6,7 @@ import { Icon } from 'antd';
 import { connectAccount } from 'core';
 import Button from '@material-ui/core/Button';
 import commaNumber from 'comma-number';
-import {
-  getTokenContract,
-  getComptrollerContract,
-  methods
-} from 'utilities/ContractService';
+import { getComptrollerContract, methods } from 'utilities/ContractService';
 import DelegationTypeModal from 'components/Basic/DelegationTypeModal';
 import LoadingSpinner from 'components/Basic/LoadingSpinner';
 import { Card } from 'components/Basic/Card';
@@ -162,7 +158,7 @@ function VotingWallet({
           [settings.selectedAddress],
           settings.selectedAddress
         )
-        .then(res => {
+        .then(() => {
           setIsLoading(false);
         })
         .catch(() => {

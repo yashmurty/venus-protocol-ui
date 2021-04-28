@@ -64,27 +64,33 @@ function BorrowMarket({ borrowedAssets, remainAssets, settings }) {
         return {
           children: (
             <div className="apy-content">
-              {settings.withXVS ? (
+              {settings.withXVS &&
                 getBigNumber(asset.xvsBorrowApy)
                   .minus(borrowApy)
-                  .isNegative() ? (
-                    <Icon type="arrow-down" style={{ color: '#f9053e' }} />
-                ) : (
-                  <Icon type="arrow-up" />
-                )
-              ) : (
+                  .isNegative() && (
+                  <Icon type="arrow-down" style={{ color: '#f9053e' }} />
+                )}
+              {settings.withXVS &&
+                !getBigNumber(asset.xvsBorrowApy)
+                  .minus(borrowApy)
+                  .isNegative() && (
+                  <Icon type="arrow-down" style={{ color: '#f9053e' }} />
+                )}
+              {!settings.withXVS && (
                 <Icon type="arrow-down" style={{ color: '#f9053e' }} />
               )}
               <div
-                className={
-                  settings.withXVS
-                    ? getBigNumber(asset.xvsBorrowApy)
-                        .minus(borrowApy)
-                        .isNegative()
+                className={`
+                  ${
+                    settings.withXVS &&
+                    getBigNumber(asset.xvsBorrowApy)
+                      .minus(borrowApy)
+                      .isNegative()
                       ? 'apy-red-label'
                       : 'apy-green-label'
-                    : 'apy-red-label'
-                }
+                  }
+                  ${!settings.withXVS ? 'apy-red-label' : ''}
+                `}
               >
                 {new BigNumber(apy.absoluteValue()).isGreaterThan(100000000)
                   ? 'Infinity'
@@ -156,13 +162,16 @@ function BorrowMarket({ borrowedAssets, remainAssets, settings }) {
       dataIndex: 'borrowApy',
       key: 'borrowApy',
       render(borrowApy, asset) {
-        const apy = settings.withXVS
-          ? getBigNumber(asset.xvsBorrowApy)
-              .minus(borrowApy)
-              .isNegative()
+        let apy;
+        if (settings.withXVS) {
+          apy = getBigNumber(asset.xvsBorrowApy)
+            .minus(borrowApy)
+            .isNegative()
             ? new BigNumber(0)
-            : getBigNumber(asset.xvsBorrowApy).minus(borrowApy)
-          : borrowApy;
+            : getBigNumber(asset.xvsBorrowApy).minus(borrowApy);
+        } else {
+          apy = borrowApy;
+        }
         return {
           children: (
             <div className="apy-content">

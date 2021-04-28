@@ -37,12 +37,9 @@ const SpinnerWrapper = styled.div`
   }
 `;
 
-let lockFlag = false;
-
 function Dashboard({ settings, setSetting }) {
   const updateMarketInfo = async () => {
     const accountAddress = settings.selectedAddress;
-    lockFlag = true;
     if (!accountAddress || !settings.decimals || !settings.markets) {
       return;
     }
@@ -82,7 +79,6 @@ function Dashboard({ settings, setSetting }) {
       vaiMinted,
       mintableVai
     });
-    lockFlag = false;
   };
 
   const handleAccountChange = async () => {
@@ -146,14 +142,11 @@ function Dashboard({ settings, setSetting }) {
 }
 
 Dashboard.propTypes = {
-  history: PropTypes.object,
   settings: PropTypes.object,
-  setSetting: PropTypes.func.isRequired,
-  getGovernanceVenus: PropTypes.func.isRequired
+  setSetting: PropTypes.func.isRequired
 };
 
 Dashboard.defaultProps = {
-  history: {},
   settings: {}
 };
 
@@ -162,12 +155,11 @@ const mapStateToProps = ({ account }) => ({
 });
 
 const mapDispatchToProps = dispatch => {
-  const { setSetting, getGovernanceVenus } = accountActionCreators;
+  const { setSetting } = accountActionCreators;
 
   return bindActionCreators(
     {
-      setSetting,
-      getGovernanceVenus
+      setSetting
     },
     dispatch
   );

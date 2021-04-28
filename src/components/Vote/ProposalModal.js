@@ -236,12 +236,12 @@ function ProposalModal({
             [targetAddresses, values, signatures, callDatas, description],
             address
           )
-          .then(res => {
+          .then(() => {
             setErrorMsg('');
             setIsLoading(false);
             onCancel();
           })
-          .catch(err => {
+          .catch(() => {
             setErrorMsg('Creating proposal is failed!');
             setIsLoading(false);
           });
@@ -249,7 +249,7 @@ function ProposalModal({
     });
   };
 
-  const handleEditorChange = ({ html, text }) => {
+  const handleEditorChange = ({ text }) => {
     setDescription(text);
   };
 

@@ -51,7 +51,7 @@ function OverviewChart({ marketType, graphType, data }) {
     setActiveIndex(-1);
   }, [marketType]);
 
-  const CustomizedAxisTick = ({ x, y, stroke, payload }) => {
+  const CustomizedAxisTick = ({ x, y }) => {
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16}>
@@ -59,6 +59,10 @@ function OverviewChart({ marketType, graphType, data }) {
         </text>
       </g>
     );
+  };
+  CustomizedAxisTick.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired
   };
 
   const CustomChart1Tooltip = ({ active, payload, label }) => {
@@ -78,8 +82,12 @@ function OverviewChart({ marketType, graphType, data }) {
     }
     return null;
   };
-
-  const CustomChart2Tooltip = ({ active, payload, label }) => {
+  CustomChart1Tooltip.propTypes = {
+    active: PropTypes.bool.isRequired,
+    payload: PropTypes.array.isRequired,
+    label: PropTypes.string.isRequired
+  };
+  const CustomChart2Tooltip = ({ active, payload }) => {
     if (active && payload && payload.length !== 0) {
       return (
         <div className="custom-tooltip">
@@ -93,8 +101,12 @@ function OverviewChart({ marketType, graphType, data }) {
     }
     return null;
   };
+  CustomChart2Tooltip.propTypes = {
+    active: PropTypes.bool.isRequired,
+    payload: PropTypes.array.isRequired
+  };
 
-  const handleMouseMove = (data, index) => {
+  const handleMouseMove = index => {
     setActiveIndex(index);
   };
 
@@ -236,7 +248,6 @@ function OverviewChart({ marketType, graphType, data }) {
 }
 
 OverviewChart.propTypes = {
-  settings: PropTypes.object,
   marketType: PropTypes.string,
   graphType: PropTypes.string,
   data: PropTypes.arrayOf(
@@ -250,8 +261,7 @@ OverviewChart.propTypes = {
 OverviewChart.defaultProps = {
   marketType: 'supply',
   graphType: 'area',
-  data: [],
-  settings: {}
+  data: []
 };
 
 const mapStateToProps = ({ account }) => ({

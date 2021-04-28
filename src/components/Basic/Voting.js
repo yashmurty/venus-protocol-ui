@@ -117,12 +117,12 @@ function Voting({ proposal, support, history }) {
       new BigNumber(proposal.againstVotes)
     );
     setForPercent(
-      isNaN(new BigNumber(proposal.forVotes * 100).div(total))
+      new BigNumber(proposal.forVotes * 100).div(total).isNaN()
         ? '0'
         : new BigNumber(proposal.forVotes * 100).div(total).toString()
     );
     setAgainstPercent(
-      isNaN(new BigNumber(proposal.againstVotes * 100).div(total))
+      new BigNumber(proposal.againstVotes * 100).div(total).isNaN()
         ? '0'
         : new BigNumber(proposal.againstVotes * 100).div(total).toString()
     );

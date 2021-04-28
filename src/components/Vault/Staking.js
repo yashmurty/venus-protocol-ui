@@ -127,12 +127,12 @@ function Staking({
         ],
         settings.selectedAddress
       )
-      .then(res => {
+      .then(() => {
         updateTotalInfo();
         setStakeAmount(new BigNumber(0));
         setIsStakeLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsStakeLoading(false);
       });
   };
@@ -154,12 +154,12 @@ function Staking({
         ],
         settings.selectedAddress
       )
-      .then(res => {
+      .then(() => {
         updateTotalInfo();
         setWithdrawAmount(new BigNumber(0));
         setIsWithdrawLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsWithdrawLoading(false);
       });
   };
@@ -179,11 +179,11 @@ function Staking({
         ],
         settings.selectedAddress
       )
-      .then(res => {
+      .then(() => {
         updateTotalInfo();
         setIsStakeLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsStakeLoading(false);
       });
   };

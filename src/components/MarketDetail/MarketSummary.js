@@ -54,7 +54,7 @@ function MarketSummary({ marketInfo, currentAsset, settings }) {
           {`$${new BigNumber(marketInfo.underlyingPrice || 0)
             .div(
               new BigNumber(10).pow(
-                18 + 18 - parseInt(settings.decimals[currentAsset].token)
+                18 + 18 - parseInt(settings.decimals[currentAsset].token, 10)
               )
             )
             .dp(8, 1)
@@ -162,9 +162,13 @@ function MarketSummary({ marketInfo, currentAsset, settings }) {
                   new BigNumber(10).pow(
                     18 +
                       +parseInt(
-                        settings.decimals[currentAsset || 'sxp'].token
+                        settings.decimals[currentAsset || 'sxp'].token,
+                        10
                       ) -
-                      +parseInt(settings.decimals[currentAsset || 'sxp'].vtoken)
+                      +parseInt(
+                        settings.decimals[currentAsset || 'sxp'].vtoken,
+                        10
+                      )
                   )
                 )
               )

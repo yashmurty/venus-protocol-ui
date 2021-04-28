@@ -284,22 +284,26 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
                 <VoteCard
                   label="For"
                   forNumber={
-                    isNaN(BigNumber(agreeVotes.sumVotes))
+                    new BigNumber(agreeVotes.sumVotes).isNaN()
                       ? '0'
                       : agreeVotes.sumVotes
                   }
                   againstNumber={
-                    isNaN(BigNumber(againstVotes.sumVotes))
+                    new BigNumber(againstVotes.sumVotes).isNaN()
                       ? '0'
                       : againstVotes.sumVotes
                   }
                   type="agree"
                   addressNumber={
-                    isNaN(BigNumber(agreeVotes.total)) ? 0 : agreeVotes.total
+                    new BigNumber(agreeVotes.total).isNaN()
+                      ? 0
+                      : agreeVotes.total
                   }
                   emptyNumber={
                     4 -
-                    (isNaN(BigNumber(agreeVotes.total)) ? 0 : agreeVotes.total)
+                    (new BigNumber(agreeVotes.total).isNaN()
+                      ? 0
+                      : agreeVotes.total)
                   }
                   list={
                     agreeVotes.result &&
@@ -315,24 +319,24 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
                 <VoteCard
                   label="Against"
                   forNumber={
-                    isNaN(BigNumber(agreeVotes.sumVotes))
+                    new BigNumber(agreeVotes.sumVotes).isNaN()
                       ? '0'
                       : agreeVotes.sumVotes
                   }
                   againstNumber={
-                    isNaN(BigNumber(againstVotes.sumVotes))
+                    new BigNumber(againstVotes.sumVotes).isNaN()
                       ? '0'
                       : againstVotes.sumVotes
                   }
                   type="against"
                   addressNumber={
-                    isNaN(BigNumber(againstVotes.total))
+                    new BigNumber(againstVotes.total).isNaN()
                       ? 0
                       : againstVotes.total
                   }
                   emptyNumber={
                     4 -
-                    (isNaN(BigNumber(againstVotes.total))
+                    (new BigNumber(againstVotes.total).isNaN()
                       ? 0
                       : againstVotes.total)
                   }
@@ -410,7 +414,7 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
                 proposalInfo.state !== 'Canceled' &&
                 proposerVotingWeight >= proposalThreshold && (
                   <p className="center warning">
-                    You can't cancel the proposal while the proposer voting
+                    You can&apos;t cancel the proposal while the proposer voting
                     weight meets proposal threshold
                   </p>
                 )}
@@ -431,7 +435,6 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
 }
 
 VoteOverview.propTypes = {
-  history: PropTypes.object,
   match: PropTypes.object,
   settings: PropTypes.object,
   getProposalById: PropTypes.func.isRequired,
@@ -439,7 +442,6 @@ VoteOverview.propTypes = {
 };
 
 VoteOverview.defaultProps = {
-  history: {},
   match: {},
   settings: {}
 };

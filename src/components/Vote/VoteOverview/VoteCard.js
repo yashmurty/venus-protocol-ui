@@ -109,12 +109,12 @@ function VoteCard({
   useEffect(() => {
     const total = new BigNumber(forNumber).plus(new BigNumber(againstNumber));
     setForPercent(
-      isNaN(new BigNumber(forNumber * 100).div(total))
+      new BigNumber(forNumber * 100).div(total).isNaN()
         ? '0'
         : new BigNumber(forNumber * 100).div(total).toString(10)
     );
     setAgainstPercent(
-      isNaN(new BigNumber(againstNumber * 100).div(total))
+      new BigNumber(againstNumber * 100).div(total).isNaN()
         ? '0'
         : new BigNumber(againstNumber * 100).div(total).toString(10)
     );

@@ -113,9 +113,7 @@ function ConnectModal({
   awaiting,
   onCancel,
   onConnectMetaMask,
-  onConnectWallet,
-  onConnectBinance,
-  onBack,
+  onBack
 }) {
   const MetaMaskStatus = () => {
     if (error && error.message === constants.NOT_INSTALLED) {
@@ -255,8 +253,6 @@ ConnectModal.propTypes = {
   wcUri: PropTypes.string,
   onCancel: PropTypes.func,
   onConnectMetaMask: PropTypes.func.isRequired,
-  onConnectBinance: PropTypes.func.isRequired,
-  onConnectWallet: PropTypes.func.isRequired,
   onBack: PropTypes.func.isRequired
 };
 

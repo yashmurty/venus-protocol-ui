@@ -316,7 +316,7 @@ function Overview({ settings, getMarketHistory }) {
             {`$${new BigNumber(marketInfo.underlyingPrice || 0)
               .div(
                 new BigNumber(10).pow(
-                  18 + 18 - parseInt(settings.decimals[currentAsset].token)
+                  18 + 18 - parseInt(settings.decimals[currentAsset].token, 10)
                 )
               )
               .dp(8, 1)
@@ -403,10 +403,12 @@ function Overview({ settings, getMarketHistory }) {
                     new BigNumber(10).pow(
                       18 +
                         +parseInt(
-                          settings.decimals[currentAsset || 'sxp'].token
+                          settings.decimals[currentAsset || 'sxp'].token,
+                          10
                         ) -
                         +parseInt(
-                          settings.decimals[currentAsset || 'sxp'].vtoken
+                          settings.decimals[currentAsset || 'sxp'].vtoken,
+                          10
                         )
                     )
                   )

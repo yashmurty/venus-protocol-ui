@@ -35,7 +35,7 @@ const ProposerInfoWrapper = styled.div`
   }
 `;
 
-function ProposerInfo({ address, history }) {
+function ProposerInfo({ address }) {
   const handleLink = () => {
     window.open(
       `${process.env.REACT_APP_BSC_EXPLORER}/address/${address}`,
@@ -69,13 +69,11 @@ function ProposerInfo({ address, history }) {
 }
 
 ProposerInfo.propTypes = {
-  address: PropTypes.string,
-  history: PropTypes.object
+  address: PropTypes.string
 };
 
 ProposerInfo.defaultProps = {
-  address: '',
-  history: {}
+  address: ''
 };
 
 export default compose(withRouter)(ProposerInfo);

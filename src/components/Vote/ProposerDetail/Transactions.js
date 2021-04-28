@@ -79,7 +79,7 @@ const TransactionsWrapper = styled.div`
 
 const format = commaNumber.bindWith(',', '.');
 
-function Transactions({ address, transactions, history }) {
+function Transactions({ address, transactions }) {
   const [data, setData] = useState([]);
   const getDate = timestamp => {
     const startDate = moment(timestamp * 1000);
@@ -170,13 +170,11 @@ function Transactions({ address, transactions, history }) {
 }
 
 Transactions.propTypes = {
-  history: PropTypes.object,
   address: PropTypes.string,
   transactions: PropTypes.array
 };
 
 Transactions.defaultProps = {
-  history: {},
   address: '',
   transactions: []
 };

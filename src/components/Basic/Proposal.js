@@ -181,10 +181,10 @@ function Proposal({
         [proposal.id, support === 'like'],
         address
       )
-      .then(res => {
+      .then(() => {
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsLoading(false);
       });
   };

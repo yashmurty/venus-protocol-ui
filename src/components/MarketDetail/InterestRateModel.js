@@ -119,14 +119,14 @@ const InterestRateModelWrapper = styled.div`
 
 let flag = false;
 
-function InterestRateModel({ settings, currentAsset, history }) {
+function InterestRateModel({ settings, currentAsset }) {
   const [graphData, setGraphData] = useState([]);
   const [tickerPos, setTickerPos] = useState(null);
   const [percent, setPercent] = useState(null);
   const [currentPercent, setCurrentPercent] = useState(0);
   const [currentPos, setCurrentPos] = useState(30);
 
-  const CustomizedAxisTick = ({ x, y, stroke, payload }) => {
+  const CustomizedAxisTick = ({ x, y }) => {
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16}>
@@ -134,6 +134,10 @@ function InterestRateModel({ settings, currentAsset, history }) {
         </text>
       </g>
     );
+  };
+  CustomizedAxisTick.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired
   };
 
   const getGraphData = async asset => {
@@ -239,7 +243,7 @@ function InterestRateModel({ settings, currentAsset, history }) {
     flag = false;
   }, [currentAsset]);
 
-  const CustomTooltip = ({ active, payload, label }) => {
+  const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length !== 0) {
       return (
         <div className="custom-tooltip">
@@ -253,6 +257,10 @@ function InterestRateModel({ settings, currentAsset, history }) {
       );
     }
     return null;
+  };
+  CustomTooltip.propTypes = {
+    active: PropTypes.bool.isRequired,
+    payload: PropTypes.array.isRequired
   };
 
   const handleMouseMove = e => {
@@ -351,13 +359,11 @@ function InterestRateModel({ settings, currentAsset, history }) {
 }
 
 InterestRateModel.propTypes = {
-  history: PropTypes.object,
   currentAsset: PropTypes.string,
   settings: PropTypes.object
 };
 
 InterestRateModel.defaultProps = {
-  history: {},
   currentAsset: '',
   settings: {}
 };

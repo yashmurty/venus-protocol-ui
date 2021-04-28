@@ -59,10 +59,10 @@ function RepayVaiTab({ settings }) {
           ],
           settings.selectedAddress
         )
-        .then(res => {
+        .then(() => {
           setIsLoading(false);
         })
-        .catch(err => {
+        .catch(() => {
           setIsLoading(false);
         });
     }
@@ -90,11 +90,11 @@ function RepayVaiTab({ settings }) {
           ],
           settings.selectedAddress
         )
-        .then(res => {
+        .then(() => {
           setAmount(new BigNumber(0));
           setIsLoading(false);
         })
-        .catch(err => {
+        .catch(() => {
           setIsLoading(false);
         });
     }

@@ -446,7 +446,6 @@ function Faucet({ form, getFromFaucet }) {
 
 Faucet.propTypes = {
   form: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
   getFromFaucet: PropTypes.func.isRequired
 };
 

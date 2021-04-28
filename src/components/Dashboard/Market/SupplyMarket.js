@@ -42,7 +42,7 @@ function SupplyMarket({ settings, suppliedAssets, remainAssets }) {
             [[r.vtokenAddress]],
             settings.selectedAddress
           )
-          .then(res => {
+          .then(() => {
             setIsCollateralConfirm(false);
           })
           .catch(() => {
@@ -60,7 +60,7 @@ function SupplyMarket({ settings, suppliedAssets, remainAssets }) {
             [r.vtokenAddress],
             settings.selectedAddress
           )
-          .then(res => {
+          .then(() => {
             setIsCollateralConfirm(false);
           })
           .catch(() => {

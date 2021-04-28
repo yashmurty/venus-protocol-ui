@@ -15,8 +15,7 @@ import LoadingSpinner from 'components/Basic/LoadingSpinner';
 import MarketInfo from 'components/MarketDetail/MarketInfo';
 import MarketSummary from 'components/MarketDetail/MarketSummary';
 import InterestRateModel from 'components/MarketDetail/InterestRateModel';
-import toast from 'components/Basic/Toast';
-import { getBigNumber } from 'utilities/common';
+// import { getBigNumber } from 'utilities/common';
 
 const MarketDetailWrapper = styled.div`
   height: 100%;
@@ -113,18 +112,12 @@ const SpinnerWrapper = styled.div`
 let timeStamp = 0;
 const abortController = new AbortController();
 
-function MarketDetail({
-  match,
-  history,
-  settings,
-  setSetting,
-  getMarketHistory
-}) {
+function MarketDetail({ match, settings, getMarketHistory }) {
   const [marketType, setMarketType] = useState('supply');
   const [currentAsset, setCurrentAsset] = useState('');
   const [data, setData] = useState([]);
   const [marketInfo, setMarketInfo] = useState({});
-  const [currentAPY, setCurrentAPY] = useState(0);
+  // const [currentAPY, setCurrentAPY] = useState(0);
 
   useEffect(() => {
     if (match.params && match.params.asset) {
@@ -181,25 +174,25 @@ function MarketDetail({
     };
   }, [settings.selectedAddress, currentAsset, getGraphData]);
 
-  useEffect(() => {
-    if (settings.assetList && settings.assetList.length > 0 && currentAsset) {
-      const currentMarketInfo =
-        settings.assetList.filter(s => s.id === currentAsset).length !== 0
-          ? settings.assetList.filter(s => s.id === currentAsset)[0]
-          : {};
-      const supplyApy = getBigNumber(currentMarketInfo.supplyApy);
-      const borrowApy = getBigNumber(currentMarketInfo.borrowApy);
-      const supplyApyWithXVS = supplyApy.plus(currentMarketInfo.xvsSupplyApy); // supplyApy;
-      const borrowApyWithXVS = getBigNumber(
-        currentMarketInfo.xvsBorrowApy
-      ).minus(borrowApy); // borrowApy;
-      setCurrentAPY(
-        marketType === 'supply'
-          ? supplyApyWithXVS.dp(2, 1).toString(10)
-          : borrowApyWithXVS.dp(2, 1).toString(10)
-      );
-    }
-  }, [currentAsset, marketType, settings.assetList]);
+  // useEffect(() => {
+  //   if (settings.assetList && settings.assetList.length > 0 && currentAsset) {
+  //     const currentMarketInfo =
+  //       settings.assetList.filter(s => s.id === currentAsset).length !== 0
+  //         ? settings.assetList.filter(s => s.id === currentAsset)[0]
+  //         : {};
+  //     const supplyApy = getBigNumber(currentMarketInfo.supplyApy);
+  //     const borrowApy = getBigNumber(currentMarketInfo.borrowApy);
+  //     const supplyApyWithXVS = supplyApy.plus(currentMarketInfo.xvsSupplyApy); // supplyApy;
+  //     const borrowApyWithXVS = getBigNumber(
+  //       currentMarketInfo.xvsBorrowApy
+  //     ).minus(borrowApy); // borrowApy;
+  //     setCurrentAPY(
+  //       marketType === 'supply'
+  //         ? supplyApyWithXVS.dp(2, 1).toString(10)
+  //         : borrowApyWithXVS.dp(2, 1).toString(10)
+  //     );
+  //   }
+  // }, [currentAsset, marketType, settings.assetList]);
 
   useEffect(() => {
     if (currentAsset) {
@@ -281,15 +274,12 @@ function MarketDetail({
 
 MarketDetail.propTypes = {
   match: PropTypes.object,
-  history: PropTypes.object,
   settings: PropTypes.object,
-  setSetting: PropTypes.func.isRequired,
   getMarketHistory: PropTypes.func.isRequired
 };
 
 MarketDetail.defaultProps = {
   match: {},
-  history: {},
   settings: {}
 };
 
@@ -298,11 +288,10 @@ const mapStateToProps = ({ account }) => ({
 });
 
 const mapDispatchToProps = dispatch => {
-  const { setSetting, getMarketHistory } = accountActionCreators;
+  const { getMarketHistory } = accountActionCreators;
 
   return bindActionCreators(
     {
-      setSetting,
       getMarketHistory
     },
     dispatch

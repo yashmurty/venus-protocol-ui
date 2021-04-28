@@ -381,6 +381,7 @@ function Market({ history, settings }) {
                           .minus(new BigNumber(b.tokenPrice))
                           .toString(10);
                   }
+                  return 0;
                 })
                 .map((item, index) => (
                   <Row

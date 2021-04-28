@@ -40,7 +40,7 @@ const SpinnerWrapper = styled.div`
 
 let timeStamp = 0;
 
-function Vote({ settings, history, getProposals, setSetting }) {
+function Vote({ settings, getProposals, setSetting }) {
   const [balance, setBalance] = useState(0);
   const [votingWeight, setVotingWeight] = useState(0);
   const [proposals, setProposals] = useState({});
@@ -323,14 +323,12 @@ function Vote({ settings, history, getProposals, setSetting }) {
 }
 
 Vote.propTypes = {
-  history: PropTypes.object,
   settings: PropTypes.object,
   getProposals: PropTypes.func.isRequired,
   setSetting: PropTypes.func.isRequired
 };
 
 Vote.defaultProps = {
-  history: {},
   settings: {}
 };
 
