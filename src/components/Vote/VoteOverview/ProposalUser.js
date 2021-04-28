@@ -35,7 +35,12 @@ const ProposalUserWrapper = styled.div`
 
 function ProposalUser({ proposalInfo }) {
   const handleAddLink = (linkType, v) => {
-    window.open(`${process.env.REACT_APP_BSC_EXPLORER}/${linkType === 'address' ? 'address' : 'tx'}/${v}`, '_blank');
+    window.open(
+      `${process.env.REACT_APP_BSC_EXPLORER}/${
+        linkType === 'address' ? 'address' : 'tx'
+      }/${v}`,
+      '_blank'
+    );
   };
 
   return (
@@ -46,7 +51,12 @@ function ProposalUser({ proposalInfo }) {
           onClick={() => handleAddLink('address', proposalInfo.proposer || '')}
         >
           <p className="highlight">
-            {proposalInfo.proposer ? `${proposalInfo.proposer.substr(0, 5)}...${proposalInfo.proposer.substr(-4, 4)}` : ''}
+            {proposalInfo.proposer
+              ? `${proposalInfo.proposer.substr(
+                  0,
+                  5
+                )}...${proposalInfo.proposer.substr(-4, 4)}`
+              : ''}
           </p>
           <div className="flex align-center just-center copy-btn">
             <Icon type="arrow-right" />

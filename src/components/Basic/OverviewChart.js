@@ -69,7 +69,9 @@ function OverviewChart({ marketType, graphType, data }) {
             {`${moment(label).format('LLL')}`}
           </p>
           <p className="label" style={{ color: 'white' }}>
-            {`${marketType === 'supply' ? 'Supply APY' : 'Borrow APY'} : ${new BigNumber(payload[0].value).dp(8, 1)}%`}
+            {`${
+              marketType === 'supply' ? 'Supply APY' : 'Borrow APY'
+            } : ${new BigNumber(payload[0].value).dp(8, 1)}%`}
           </p>
         </div>
       );
@@ -82,7 +84,9 @@ function OverviewChart({ marketType, graphType, data }) {
       return (
         <div className="custom-tooltip">
           <p className="label" style={{ color: 'white' }}>
-            {`${marketType === 'supply' ? 'Total Supply' : 'Total Borrow'} : ${currencyFormatter(payload[0].value ? payload[0].value : 0)}`}
+            {`${
+              marketType === 'supply' ? 'Total Supply' : 'Total Borrow'
+            } : ${currencyFormatter(payload[0].value ? payload[0].value : 0)}`}
           </p>
         </div>
       );
@@ -141,9 +145,17 @@ function OverviewChart({ marketType, graphType, data }) {
                 type="monotone"
                 isAnimationActive
                 dataKey={marketType === 'supply' ? 'supplyApy' : 'borrowApy'}
-                stroke={`${marketType !== 'supply' ? 'url(#barRedColor)' : 'url(#barGreenColor)'}`}
+                stroke={`${
+                  marketType !== 'supply'
+                    ? 'url(#barRedColor)'
+                    : 'url(#barGreenColor)'
+                }`}
                 strokeWidth={2}
-                fill={`${marketType !== 'supply' ? 'url(#areaRedColor)' : 'url(#areaGreenColor)'}`}
+                fill={`${
+                  marketType !== 'supply'
+                    ? 'url(#areaRedColor)'
+                    : 'url(#areaGreenColor)'
+                }`}
               />
             )}
             {graphType === 'composed' && (
@@ -152,7 +164,11 @@ function OverviewChart({ marketType, graphType, data }) {
                 dot={false}
                 isAnimationActive
                 dataKey={marketType === 'supply' ? 'supplyApy' : 'borrowApy'}
-                stroke={`${marketType !== 'supply' ? 'url(#barRedColor)' : 'url(#barGreenColor)'}`}
+                stroke={`${
+                  marketType !== 'supply'
+                    ? 'url(#barRedColor)'
+                    : 'url(#barGreenColor)'
+                }`}
                 strokeWidth={2}
               />
             )}
@@ -190,11 +206,25 @@ function OverviewChart({ marketType, graphType, data }) {
               <Tooltip cursor={false} content={<CustomChart2Tooltip />} />
               <Bar
                 isAnimationActive
-                dataKey={marketType === 'supply' ? 'totalSupply' : 'totalBorrow'}
+                dataKey={
+                  marketType === 'supply' ? 'totalSupply' : 'totalBorrow'
+                }
                 onMouseMove={handleMouseMove}
               >
                 {data.map((entry, index) => (
-                  <Cell cursor="pointer" fill={index === activeIndex ? `${marketType !== 'supply' ? 'url(#barRedColor)' : 'url(#barGreenColor)'}` : '#252a4a'} key={`cell-${index}`} />
+                  <Cell
+                    cursor="pointer"
+                    fill={
+                      index === activeIndex
+                        ? `${
+                            marketType !== 'supply'
+                              ? 'url(#barRedColor)'
+                              : 'url(#barGreenColor)'
+                          }`
+                        : '#252a4a'
+                    }
+                    key={`cell-${index}`}
+                  />
                 ))}
               </Bar>
             </BarChart>

@@ -115,11 +115,11 @@ function SupplyTab({ asset, settings, changeTab, onCancel, setSetting }) {
           ],
           settings.selectedAddress
         )
-        .then(res => {
+        .then(() => {
           setIsEnabled(true);
           setIsLoading(false);
         })
-        .catch(err => {
+        .catch(() => {
           setIsLoading(false);
         });
     }
@@ -165,7 +165,7 @@ function SupplyTab({ asset, settings, changeTab, onCancel, setSetting }) {
             ],
             settings.selectedAddress
           )
-          .then(res => {
+          .then(() => {
             setAmount(new BigNumber(0));
             setIsLoading(false);
             setSetting({
@@ -185,7 +185,7 @@ function SupplyTab({ asset, settings, changeTab, onCancel, setSetting }) {
                 type: '',
                 status: false,
                 amount: 0,
-                symbol: '',
+                symbol: ''
               }
             });
           });
@@ -247,7 +247,8 @@ function SupplyTab({ asset, settings, changeTab, onCancel, setSetting }) {
           <>
             <img src={asset.img} alt="asset" />
             <p className="center warning-label">
-              To Supply {asset.name} to the Venus Protocol, you need to approve it first.
+              To Supply {asset.name} to the Venus Protocol, you need to approve
+              it first.
             </p>
           </>
         )}
@@ -281,7 +282,16 @@ function SupplyTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </div>
           <div className="description">
             <div className="flex align-center">
-              <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={coinImg} alt="asset" />
+              <img
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginLeft: 2,
+                  marginRight: 16
+                }}
+                src={coinImg}
+                alt="asset"
+              />
               <span>Distribution APY</span>
             </div>
             <span>
@@ -293,7 +303,16 @@ function SupplyTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </div>
           <div className="description">
             <div className="flex align-center">
-              <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={vaiImg} alt="asset" />
+              <img
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginLeft: 2,
+                  marginRight: 16
+                }}
+                src={vaiImg}
+                alt="asset"
+              />
               <span>Available VAI Limit</span>
             </div>
             <span>

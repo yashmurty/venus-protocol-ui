@@ -141,8 +141,12 @@ function MarketDetail({
             createdAt: m.createdAt,
             supplyApy: +new BigNumber(m.supplyApy || 0).dp(8, 1).toString(10),
             borrowApy: +new BigNumber(m.borrowApy || 0).dp(8, 1).toString(10),
-            totalSupply: +(new BigNumber(m.totalSupply || 0).dp(8, 1).toString(10)),
-            totalBorrow: +(new BigNumber(m.totalBorrow || 0).dp(8, 1).toString(10))
+            totalSupply: +new BigNumber(m.totalSupply || 0)
+              .dp(8, 1)
+              .toString(10),
+            totalBorrow: +new BigNumber(m.totalBorrow || 0)
+              .dp(8, 1)
+              .toString(10)
           });
         });
         setData([...tempData.reverse()]);
@@ -186,7 +190,9 @@ function MarketDetail({
       const supplyApy = getBigNumber(currentMarketInfo.supplyApy);
       const borrowApy = getBigNumber(currentMarketInfo.borrowApy);
       const supplyApyWithXVS = supplyApy.plus(currentMarketInfo.xvsSupplyApy); // supplyApy;
-      const borrowApyWithXVS = getBigNumber(currentMarketInfo.xvsBorrowApy).minus(borrowApy); // borrowApy;
+      const borrowApyWithXVS = getBigNumber(
+        currentMarketInfo.xvsBorrowApy
+      ).minus(borrowApy); // borrowApy;
       setCurrentAPY(
         marketType === 'supply'
           ? supplyApyWithXVS.dp(2, 1).toString(10)
@@ -231,19 +237,27 @@ function MarketDetail({
                   <CardWrapper>
                     <div className="flex align-center market-tab-wrapper">
                       <div
-                        className={`tab-item pointer ${marketType === 'supply' ? 'tab-active' : ''}`}
+                        className={`tab-item pointer ${
+                          marketType === 'supply' ? 'tab-active' : ''
+                        }`}
                         onClick={() => setMarketType('supply')}
                       >
                         Supply
                       </div>
                       <div
-                        className={`tab-item pointer ${marketType === 'borrow' ? 'tab-active' : ''}`}
+                        className={`tab-item pointer ${
+                          marketType === 'borrow' ? 'tab-active' : ''
+                        }`}
                         onClick={() => setMarketType('borrow')}
                       >
                         Borrow
                       </div>
                     </div>
-                    <OverviewChart marketType={marketType} graphType="composed" data={data} />
+                    <OverviewChart
+                      marketType={marketType}
+                      graphType="composed"
+                      data={data}
+                    />
                   </CardWrapper>
                 </div>
                 <div className="flex row2">

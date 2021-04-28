@@ -43,7 +43,6 @@ const TotalInfoWrapper = styled.div`
 const format = commaNumber.bindWith(',', '.');
 
 function TotalInfo({ settings, emission, totalVaiStaked, pendingRewards }) {
-
   return (
     <Card>
       <TotalInfoWrapper>
@@ -72,7 +71,7 @@ TotalInfo.propTypes = {
   settings: PropTypes.object,
   emission: PropTypes.string.isRequired,
   totalVaiStaked: PropTypes.string.isRequired,
-  pendingRewards: PropTypes.string.isRequired,
+  pendingRewards: PropTypes.string.isRequired
 };
 
 TotalInfo.defaultProps = {

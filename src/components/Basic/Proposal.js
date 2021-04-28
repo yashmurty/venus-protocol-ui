@@ -124,11 +124,19 @@ function Proposal({
   const getRemainTime = item => {
     if (item.state === 'Active') {
       const diffBlock = item.endBlock - item.blockNumber;
-      const duration = moment.duration(diffBlock < 0 ? 0 : diffBlock * 3, 'seconds');
+      const duration = moment.duration(
+        diffBlock < 0 ? 0 : diffBlock * 3,
+        'seconds'
+      );
       const days = Math.floor(duration.asDays());
       const hours = Math.floor(duration.asHours()) - days * 24;
-      const minutes = Math.floor(duration.asMinutes()) - days * 24 * 60 - hours * 60;
-      return `${days > 0 ? `${days} ${days > 1 ? 'days' : 'day'},` : ''} ${hours} ${hours > 1 ? 'hrs' : 'hr'} ${days === 0 ? `, ${minutes} ${minutes > 1 ? 'minutes' : 'minute'}` : ''} left`;
+      const minutes =
+        Math.floor(duration.asMinutes()) - days * 24 * 60 - hours * 60;
+      return `${
+        days > 0 ? `${days} ${days > 1 ? 'days' : 'day'},` : ''
+      } ${hours} ${hours > 1 ? 'hrs' : 'hr'} ${
+        days === 0 ? `, ${minutes} ${minutes > 1 ? 'minutes' : 'minute'}` : ''
+      } left`;
     }
     if (item.state === 'Pending') {
       return `${moment(item.createdTimestamp * 1000).format('MMMM DD, YYYY')}`;
@@ -192,7 +200,8 @@ function Proposal({
   return (
     <ProposalWrapper
       className="flex flex-column pointer"
-      onClick={() => history.push(`/vote/proposal/${proposal.id}`)}>
+      onClick={() => history.push(`/vote/proposal/${proposal.id}`)}
+    >
       <div className="title">
         <ReactMarkdown source={getTitle(proposal.description.split('\n'))} />
       </div>
@@ -231,7 +240,8 @@ function Proposal({
           {voteStatus &&
             voteStatus === 'novoted' &&
             proposal.state === 'Active' &&
-            delegateAddress !== '0x0000000000000000000000000000000000000000' && (
+            delegateAddress !==
+              '0x0000000000000000000000000000000000000000' && (
               <div
                 className="flex align-center"
                 onClick={e => e.stopPropagation()}
@@ -245,7 +255,8 @@ function Proposal({
                   }
                   onClick={() => handleVote('like')}
                 >
-                  {isLoading && voteType === 'like' && <Icon type="loading" />} For
+                  {isLoading && voteType === 'like' && <Icon type="loading" />}{' '}
+                  For
                 </Button>
                 <Button
                   className="vote-btn"
@@ -256,7 +267,10 @@ function Proposal({
                   }
                   onClick={() => handleVote('dislike')}
                 >
-                  {isLoading && voteType === 'dislike' && <Icon type="loading" />} Against
+                  {isLoading && voteType === 'dislike' && (
+                    <Icon type="loading" />
+                  )}{' '}
+                  Against
                 </Button>
               </div>
             )}

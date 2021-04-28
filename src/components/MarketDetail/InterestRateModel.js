@@ -144,8 +144,14 @@ function InterestRateModel({ settings, currentAsset, history }) {
       []
     );
     const interestModelContract = getInterestModelContract(interestRateModel);
-    const multiplierPerBlock = await methods.call(interestModelContract.methods.multiplierPerBlock, []);
-    const baseRatePerBlock = await methods.call(interestModelContract.methods.baseRatePerBlock, []);
+    const multiplierPerBlock = await methods.call(
+      interestModelContract.methods.multiplierPerBlock,
+      []
+    );
+    const baseRatePerBlock = await methods.call(
+      interestModelContract.methods.baseRatePerBlock,
+      []
+    );
     const data = [];
     const marketInfo = settings.markets.find(
       item => item.underlyingSymbol.toLowerCase() === asset.toLowerCase()
@@ -157,10 +163,17 @@ function InterestRateModel({ settings, currentAsset, history }) {
     let cash = await methods.call(vbepContract.methods.getCash, []);
     cash = new BigNumber(cash).div(new BigNumber(10).pow(18));
     const borrows = new BigNumber(marketInfo.totalBorrows2);
-    const reserves = new BigNumber(marketInfo.totalReserves || 0).div(new BigNumber(10).pow(settings.decimals[asset].token));
-    const currentUtilizationRate = borrows.div(cash.plus(borrows).minus(reserves));
+    const reserves = new BigNumber(marketInfo.totalReserves || 0).div(
+      new BigNumber(10).pow(settings.decimals[asset].token)
+    );
+    const currentUtilizationRate = borrows.div(
+      cash.plus(borrows).minus(reserves)
+    );
 
-    const tempCurrentPercent = parseInt(+currentUtilizationRate.toString(10) * 100, 10);
+    const tempCurrentPercent = parseInt(
+      +currentUtilizationRate.toString(10) * 100,
+      10
+    );
     setCurrentPercent(tempCurrentPercent || 0);
     const lineElement = document.getElementById('line');
     if (lineElement) {
@@ -169,20 +182,36 @@ function InterestRateModel({ settings, currentAsset, history }) {
     for (let i = 0; i <= 1; i += 0.01) {
       const utilizationRate = i;
       // Borrow Rate
-      const borrowRate = new BigNumber(utilizationRate).multipliedBy(new BigNumber(multiplierPerBlock)).plus(new BigNumber(baseRatePerBlock));
+      const borrowRate = new BigNumber(utilizationRate)
+        .multipliedBy(new BigNumber(multiplierPerBlock))
+        .plus(new BigNumber(baseRatePerBlock));
 
       // Supply Rate
       const rateToPool = borrowRate.multipliedBy(oneMinusReserveFactor);
-      const supplyRate = new BigNumber(utilizationRate).multipliedBy(rateToPool);
+      const supplyRate = new BigNumber(utilizationRate).multipliedBy(
+        rateToPool
+      );
       // supply apy, borrow apy
       const blocksPerDay = 20 * 60 * 24;
       const daysPerYear = 365;
 
       const mantissa = new BigNumber(10).pow(18);
-      const supplyBase = supplyRate.div(mantissa).times(blocksPerDay).plus(1);
-      const borrowBase = borrowRate.div(mantissa).times(blocksPerDay).plus(1);
-      const supplyApy = supplyBase.pow(daysPerYear - 1).minus(1).times(100);
-      const borrowApy = borrowBase.pow(daysPerYear - 1).minus(1).times(100);
+      const supplyBase = supplyRate
+        .div(mantissa)
+        .times(blocksPerDay)
+        .plus(1);
+      const borrowBase = borrowRate
+        .div(mantissa)
+        .times(blocksPerDay)
+        .plus(1);
+      const supplyApy = supplyBase
+        .pow(daysPerYear - 1)
+        .minus(1)
+        .times(100);
+      const borrowApy = borrowBase
+        .pow(daysPerYear - 1)
+        .minus(1)
+        .times(100);
 
       data.push({
         percent: i,
@@ -244,7 +273,6 @@ function InterestRateModel({ settings, currentAsset, history }) {
     }
   };
 
-
   return (
     <InterestRateModelWrapper>
       <p className="title">Interest Rate Model</p>
@@ -301,8 +329,20 @@ function InterestRateModel({ settings, currentAsset, history }) {
             />
             <YAxis hide />
             <Tooltip cursor={false} content={<CustomTooltip />} />
-            <Line type="monotone" dot={false} dataKey="borrowApy" stroke={'url(#barRedColor)'} strokeWidth={2} />
-            <Line type="monotone" dot={false} dataKey="supplyApy" stroke={'url(#barGreenColor)'} strokeWidth={2} />
+            <Line
+              type="monotone"
+              dot={false}
+              dataKey="borrowApy"
+              stroke="url(#barRedColor)"
+              strokeWidth={2}
+            />
+            <Line
+              type="monotone"
+              dot={false}
+              dataKey="supplyApy"
+              stroke="url(#barGreenColor)"
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>

@@ -43,7 +43,9 @@ function RepayBorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
         setNewBorrowPercent(new BigNumber(0));
       } else {
         setBorrowPercent(totalBorrowBalance.div(totalBorrowLimit).times(100));
-        setNewBorrowPercent(totalBorrowBalance.div(totalBorrowLimit).times(100));
+        setNewBorrowPercent(
+          totalBorrowBalance.div(totalBorrowLimit).times(100)
+        );
       }
     } else {
       const temp = totalBorrowBalance.minus(amount.times(tokenPrice));
@@ -87,11 +89,11 @@ function RepayBorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
           ],
           settings.selectedAddress
         )
-        .then(res => {
+        .then(() => {
           setIsEnabled(true);
           setIsLoading(false);
         })
-        .catch(err => {
+        .catch(() => {
           setIsLoading(false);
         });
     }
@@ -211,7 +213,8 @@ function RepayBorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
           <>
             <img src={asset.img} alt="asset" />
             <p className="center warning-label">
-              To Repay {asset.name} to the Venus Protocol, you need to enable it first.
+              To Repay {asset.name} to the Venus Protocol, you need to enable it
+              first.
             </p>
           </>
         )}
@@ -245,7 +248,16 @@ function RepayBorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </div>
           <div className="description">
             <div className="flex align-center">
-              <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={coinImg} alt="asset" />
+              <img
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginLeft: 2,
+                  marginRight: 16
+                }}
+                src={coinImg}
+                alt="asset"
+              />
               <span>Distribution APY</span>
             </div>
             <span>
@@ -257,7 +269,16 @@ function RepayBorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </div>
           <div className="description">
             <div className="flex align-center">
-              <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={vaiImg} alt="asset" />
+              <img
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginLeft: 2,
+                  marginRight: 16
+                }}
+                src={vaiImg}
+                alt="asset"
+              />
               <span>Repay VAI Balance</span>
             </div>
             <span>

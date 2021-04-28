@@ -297,7 +297,9 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     if (settings.walletType === 'binance') {
       netId = +window.BinanceChain.chainId;
     } else {
-      netId = window.ethereum.networkVersion ? +window.ethereum.networkVersion : +window.ethereum.chainId
+      netId = window.ethereum.networkVersion
+        ? +window.ethereum.networkVersion
+        : +window.ethereum.chainId;
     }
     setSetting({
       accountLoading: true
@@ -329,7 +331,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
   useEffect(() => {
     if (window.ethereum) {
-      window.addEventListener('load', (event) => {
+      window.addEventListener('load', event => {
         checkNetwork();
       });
     }
@@ -511,7 +513,10 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
   useEffect(() => {
     if (window.ethereum) {
-      if (!settings.accountLoading && (checkIsValidNetwork(settings.walletType))) {
+      if (
+        !settings.accountLoading &&
+        checkIsValidNetwork(settings.walletType)
+      ) {
         initSettings();
       }
     }
@@ -547,18 +552,30 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     const vaiContract = getVaiTokenContract();
 
     // Total Vai Staked
-    let vaiVaultStaked = await methods.call(vaiContract.methods.balanceOf, [constants.CONTRACT_VAI_VAULT_ADDRESS]);
-    vaiVaultStaked = new BigNumber(vaiVaultStaked).div(1e18).dp(4, 1).toString(10);
+    let vaiVaultStaked = await methods.call(vaiContract.methods.balanceOf, [
+      constants.CONTRACT_VAI_VAULT_ADDRESS
+    ]);
+    vaiVaultStaked = new BigNumber(vaiVaultStaked)
+      .div(1e18)
+      .dp(4, 1)
+      .toString(10);
 
     // minted vai amount
-    let vaiMinted = await methods.call(appContract.methods.mintedVAIs, [accountAddress]);
+    let vaiMinted = await methods.call(appContract.methods.mintedVAIs, [
+      accountAddress
+    ]);
     vaiMinted = new BigNumber(vaiMinted).div(new BigNumber(10).pow(18));
 
     // VAI APY
     let vaiAPY;
     if (settings.dailyVenus && vaiVaultStaked) {
-      let venusVAIVaultRate = await methods.call(appContract.methods.venusVAIVaultRate, []);
-      venusVAIVaultRate = new BigNumber(venusVAIVaultRate).div(1e18).times(20 * 60 * 24);
+      let venusVAIVaultRate = await methods.call(
+        appContract.methods.venusVAIVaultRate,
+        []
+      );
+      venusVAIVaultRate = new BigNumber(venusVAIVaultRate)
+        .div(1e18)
+        .times(20 * 60 * 24);
       const xvsMarket = settings.markets.find(
         ele => ele.underlyingSymbol === 'XVS'
       );
@@ -573,7 +590,9 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
       });
     }
 
-    const assetsIn = await methods.call(appContract.methods.getAssetsIn, [accountAddress]);
+    const assetsIn = await methods.call(appContract.methods.getAssetsIn, [
+      accountAddress
+    ]);
 
     let totalSupplyBalance = new BigNumber(0);
     let totalBorrowBalance = new BigNumber(0);
@@ -581,7 +600,11 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     let totalLiquidity = new BigNumber(0);
     const assetList = [];
 
-    for (let index = 0; index < Object.values(constants.CONTRACT_TOKEN_ADDRESS).length; index++) {
+    for (
+      let index = 0;
+      index < Object.values(constants.CONTRACT_TOKEN_ADDRESS).length;
+      index++
+    ) {
       const item = Object.values(constants.CONTRACT_TOKEN_ADDRESS)[index];
       if (!settings.decimals[item.id]) {
         return;
@@ -624,29 +647,47 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
       // wallet balance
       if (item.id !== 'bnb') {
         const tokenContract = getTokenContract(item.id);
-        const walletBalance = await methods.call(tokenContract.methods.balanceOf, [accountAddress]);
-        asset.walletBalance = new BigNumber(walletBalance).div(new BigNumber(10).pow(tokenDecimal));
+        const walletBalance = await methods.call(
+          tokenContract.methods.balanceOf,
+          [accountAddress]
+        );
+        asset.walletBalance = new BigNumber(walletBalance).div(
+          new BigNumber(10).pow(tokenDecimal)
+        );
 
         // allowance
-        let allowBalance = await methods.call(tokenContract.methods.allowance, [accountAddress, asset.vtokenAddress]);
-        allowBalance = new BigNumber(allowBalance).div(new BigNumber(10).pow(tokenDecimal));
+        let allowBalance = await methods.call(tokenContract.methods.allowance, [
+          accountAddress,
+          asset.vtokenAddress
+        ]);
+        allowBalance = new BigNumber(allowBalance).div(
+          new BigNumber(10).pow(tokenDecimal)
+        );
         asset.isEnabled = allowBalance.isGreaterThan(asset.walletBalance);
       } else if (window.ethereum) {
         await window.web3.eth.getBalance(accountAddress, (err, res) => {
           if (!err) {
-            asset.walletBalance = new BigNumber(res).div(new BigNumber(10).pow(tokenDecimal));
+            asset.walletBalance = new BigNumber(res).div(
+              new BigNumber(10).pow(tokenDecimal)
+            );
           }
         });
         asset.isEnabled = true;
       }
       // supply balance
-      const supplyBalance = await methods.call(vBepContract.methods.balanceOfUnderlying, [accountAddress]);
+      const supplyBalance = await methods.call(
+        vBepContract.methods.balanceOfUnderlying,
+        [accountAddress]
+      );
       asset.supplyBalance = new BigNumber(supplyBalance).div(
         new BigNumber(10).pow(tokenDecimal)
       );
 
       // borrow balance
-      const borrowBalance = await methods.call(vBepContract.methods.borrowBalanceCurrent, [accountAddress]);
+      const borrowBalance = await methods.call(
+        vBepContract.methods.borrowBalanceCurrent,
+        [accountAddress]
+      );
       asset.borrowBalance = new BigNumber(borrowBalance).div(
         new BigNumber(10).pow(tokenDecimal)
       );
@@ -662,7 +703,9 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
             .toString(10);
 
       // hypotheticalLiquidity
-      const totalBalance = await methods.call(vBepContract.methods.balanceOf, [accountAddress]);
+      const totalBalance = await methods.call(vBepContract.methods.balanceOf, [
+        accountAddress
+      ]);
       asset.hypotheticalLiquidity = await methods.call(
         appContract.methods.getHypotheticalAccountLiquidity,
         [accountAddress, asset.vtokenAddress, totalBalance, 0]
@@ -686,7 +729,9 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         new BigNumber(market.totalSupplyUsd || 0)
       );
     }
-    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [constants.CONTRACT_VAI_VAULT_ADDRESS]);
+    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
+      constants.CONTRACT_VAI_VAULT_ADDRESS
+    ]);
     vaiBalance = new BigNumber(vaiBalance).div(1e18);
 
     setSetting({

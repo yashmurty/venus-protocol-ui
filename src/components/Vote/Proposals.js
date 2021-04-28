@@ -232,8 +232,9 @@ function Proposals({
           )}
         </div>
         <div className="body">
-        {isLoadingProposal ? <LoadingSpinner /> : 
-          proposals && proposals.length !== 0 ? (        
+          {isLoadingProposal ? (
+            <LoadingSpinner />
+          ) : proposals && proposals.length !== 0 ? (
             proposals.map(item => {
               return (
                 <Proposal
@@ -244,12 +245,12 @@ function Proposals({
                   key={item.id}
                 />
               );
-            })        
+            })
           ) : (
-          <NoProposalWrapper className="flex just-center align-center">
-            <div className="title">No Proposals</div>
-          </NoProposalWrapper>
-        )}
+            <NoProposalWrapper className="flex just-center align-center">
+              <div className="title">No Proposals</div>
+            </NoProposalWrapper>
+          )}
         </div>
         {proposals && proposals.length !== 0 && (
           <div className="flex align-center just-between footer">

@@ -65,16 +65,33 @@ function BorrowMarket({ borrowedAssets, remainAssets, settings }) {
           children: (
             <div className="apy-content">
               {settings.withXVS ? (
-                getBigNumber(asset.xvsBorrowApy).minus(borrowApy).isNegative() ? <Icon type="arrow-down" style={{ color: '#f9053e' }} /> : <Icon type="arrow-up" />
+                getBigNumber(asset.xvsBorrowApy)
+                  .minus(borrowApy)
+                  .isNegative() ? (
+                    <Icon type="arrow-down" style={{ color: '#f9053e' }} />
+                ) : (
+                  <Icon type="arrow-up" />
+                )
               ) : (
                 <Icon type="arrow-down" style={{ color: '#f9053e' }} />
               )}
               <div
                 className={
-                  settings.withXVS ? (getBigNumber(asset.xvsBorrowApy).minus(borrowApy).isNegative() ? 'apy-red-label' : 'apy-green-label') : 'apy-red-label'
+                  settings.withXVS
+                    ? getBigNumber(asset.xvsBorrowApy)
+                        .minus(borrowApy)
+                        .isNegative()
+                      ? 'apy-red-label'
+                      : 'apy-green-label'
+                    : 'apy-red-label'
                 }
               >
-                {new BigNumber(apy.absoluteValue()).isGreaterThan(100000000) ? 'Infinity' : `${apy.absoluteValue().dp(2, 1).toString(10)}%`}
+                {new BigNumber(apy.absoluteValue()).isGreaterThan(100000000)
+                  ? 'Infinity'
+                  : `${apy
+                      .absoluteValue()
+                      .dp(2, 1)
+                      .toString(10)}%`}
               </div>
             </div>
           )
@@ -140,7 +157,11 @@ function BorrowMarket({ borrowedAssets, remainAssets, settings }) {
       key: 'borrowApy',
       render(borrowApy, asset) {
         const apy = settings.withXVS
-          ? getBigNumber(asset.xvsBorrowApy).minus(borrowApy).isNegative() ? new BigNumber(0) : getBigNumber(asset.xvsBorrowApy).minus(borrowApy)
+          ? getBigNumber(asset.xvsBorrowApy)
+              .minus(borrowApy)
+              .isNegative()
+            ? new BigNumber(0)
+            : getBigNumber(asset.xvsBorrowApy).minus(borrowApy)
           : borrowApy;
         return {
           children: (
@@ -155,7 +176,9 @@ function BorrowMarket({ borrowedAssets, remainAssets, settings }) {
                   settings.withXVS ? 'apy-green-label' : 'apy-red-label'
                 }
               >
-                {new BigNumber(apy).isGreaterThan(100000000) ? 'Infinity' : `${apy.dp(2, 1).toString(10)}%`}
+                {new BigNumber(apy).isGreaterThan(100000000)
+                  ? 'Infinity'
+                  : `${apy.dp(2, 1).toString(10)}%`}
               </div>
             </div>
           )

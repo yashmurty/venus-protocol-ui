@@ -159,21 +159,37 @@ function Market({ history, settings }) {
     const vaiContract = getVaiTokenContract();
 
     const tempTS = (settings.markets || []).reduce((accumulator, market) => {
-      return new BigNumber(accumulator).plus(new BigNumber(market.totalSupplyUsd));
+      return new BigNumber(accumulator).plus(
+        new BigNumber(market.totalSupplyUsd)
+      );
     }, 0);
     const tempTB = (settings.markets || []).reduce((accumulator, market) => {
-      return new BigNumber(accumulator).plus(new BigNumber(market.totalBorrowsUsd));
+      return new BigNumber(accumulator).plus(
+        new BigNumber(market.totalBorrowsUsd)
+      );
     }, 0);
     const tempAL = (settings.markets || []).reduce((accumulator, market) => {
       return new BigNumber(accumulator).plus(new BigNumber(market.liquidity));
     }, 0);
 
-    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [constants.CONTRACT_VAI_VAULT_ADDRESS]);
+    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
+      constants.CONTRACT_VAI_VAULT_ADDRESS
+    ]);
     vaiBalance = new BigNumber(vaiBalance).div(1e18);
 
-    setTotalSupply(tempTS.plus(vaiBalance).dp(2, 1).toString(10));
+    setTotalSupply(
+      tempTS
+        .plus(vaiBalance)
+        .dp(2, 1)
+        .toString(10)
+    );
     setTotalBorrow(tempTB.dp(2, 1).toString(10));
-    setAvailableLiquidity(tempAL.plus(vaiBalance).dp(2, 1).toString(10));
+    setAvailableLiquidity(
+      tempAL
+        .plus(vaiBalance)
+        .dp(2, 1)
+        .toString(10)
+    );
   };
 
   useEffect(() => {
@@ -183,7 +199,11 @@ function Market({ history, settings }) {
   }, [settings.markets]);
 
   const handleSort = field => {
-    setSortInfo({ field, sort: sortInfo.field === field && sortInfo.sort === 'desc' ? 'asc' : 'desc' });
+    setSortInfo({
+      field,
+      sort:
+        sortInfo.field === field && sortInfo.sort === 'desc' ? 'asc' : 'desc'
+    });
   };
 
   return (
@@ -208,35 +228,73 @@ function Market({ history, settings }) {
             <div className="vai-apy">VAI Staking APY: {settings.vaiAPY}%</div>
           )}
           <Row className="table_header">
-            <Col xs={{ span: 24 }} lg={{ span: 2 }} className="market"></Col>
-            <Col xs={{ span: 6 }} lg={{ span: 4 }} className="total-supply right">
+            <Col xs={{ span: 24 }} lg={{ span: 2 }} className="market" />
+            <Col
+              xs={{ span: 6 }}
+              lg={{ span: 4 }}
+              className="total-supply right"
+            >
               <span onClick={() => handleSort('total_supply')}>
-                Total Supply {sortInfo.field === 'total_supply' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                Total Supply{' '}
+                {sortInfo.field === 'total_supply' && (
+                  <Icon
+                    type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'}
+                  />
+                )}
               </span>
             </Col>
             <Col xs={{ span: 6 }} lg={{ span: 3 }} className="supply-apy right">
               <span onClick={() => handleSort('supply_apy')}>
-                Supply APY {sortInfo.field === 'supply_apy' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                Supply APY{' '}
+                {sortInfo.field === 'supply_apy' && (
+                  <Icon
+                    type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'}
+                  />
+                )}
               </span>
             </Col>
-            <Col xs={{ span: 6 }} lg={{ span: 4 }} className="total-borrow right">
+            <Col
+              xs={{ span: 6 }}
+              lg={{ span: 4 }}
+              className="total-borrow right"
+            >
               <span onClick={() => handleSort('total_borrow')}>
-                Total Borrow {sortInfo.field === 'total_borrow' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                Total Borrow{' '}
+                {sortInfo.field === 'total_borrow' && (
+                  <Icon
+                    type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'}
+                  />
+                )}
               </span>
             </Col>
             <Col xs={{ span: 6 }} lg={{ span: 3 }} className="borrow-apy right">
               <span onClick={() => handleSort('borrow_apy')}>
-                Borrow APY {sortInfo.field === 'borrow_apy' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                Borrow APY{' '}
+                {sortInfo.field === 'borrow_apy' && (
+                  <Icon
+                    type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'}
+                  />
+                )}
               </span>
             </Col>
             <Col xs={{ span: 6 }} lg={{ span: 4 }} className="liquidity right">
               <span onClick={() => handleSort('liquidity')}>
-                Liquidity {sortInfo.field === 'liquidity' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                Liquidity{' '}
+                {sortInfo.field === 'liquidity' && (
+                  <Icon
+                    type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'}
+                  />
+                )}
               </span>
             </Col>
             <Col xs={{ span: 6 }} lg={{ span: 4 }} className="price right">
               <span onClick={() => handleSort('price')}>
-                Price {sortInfo.field === 'price' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                Price{' '}
+                {sortInfo.field === 'price' && (
+                  <Icon
+                    type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'}
+                  />
+                )}
               </span>
             </Col>
           </Row>
@@ -245,41 +303,83 @@ function Market({ history, settings }) {
               (settings.markets || [])
                 .sort((a, b) => {
                   if (!sortInfo.field) {
-                    return +new BigNumber(b.totalBorrowsUsd).minus(new BigNumber(a.totalBorrowsUsd)).toString(10)
+                    return +new BigNumber(b.totalBorrowsUsd)
+                      .minus(new BigNumber(a.totalBorrowsUsd))
+                      .toString(10);
                   }
                   if (sortInfo.field === 'total_supply') {
-                    return sortInfo.sort === 'desc' ? 
-                      +new BigNumber(b.totalSupplyUsd).minus(new BigNumber(a.totalSupplyUsd)).toString(10) :
-                      +new BigNumber(a.totalSupplyUsd).minus(new BigNumber(b.totalSupplyUsd)).toString(10)
+                    return sortInfo.sort === 'desc'
+                      ? +new BigNumber(b.totalSupplyUsd)
+                          .minus(new BigNumber(a.totalSupplyUsd))
+                          .toString(10)
+                      : +new BigNumber(a.totalSupplyUsd)
+                          .minus(new BigNumber(b.totalSupplyUsd))
+                          .toString(10);
                   }
                   if (sortInfo.field === 'supply_apy') {
-                    const aAPY = new BigNumber(a.supplyApy).plus(new BigNumber(a.supplyVenusApy)).isLessThan(0.01) ? '0.01' : new BigNumber(a.supplyApy).plus(new BigNumber(a.supplyVenusApy));
-                    const bAPY = new BigNumber(b.supplyApy).plus(new BigNumber(b.supplyVenusApy)).isLessThan(0.01) ? '0.01' : new BigNumber(b.supplyApy).plus(new BigNumber(b.supplyVenusApy));
-                    return sortInfo.sort === 'desc' ? 
-                      +bAPY.minus(aAPY).toString(10) :
-                      +aAPY.minus(bAPY).toString(10)
+                    const aAPY = new BigNumber(a.supplyApy)
+                      .plus(new BigNumber(a.supplyVenusApy))
+                      .isLessThan(0.01)
+                      ? '0.01'
+                      : new BigNumber(a.supplyApy).plus(
+                          new BigNumber(a.supplyVenusApy)
+                        );
+                    const bAPY = new BigNumber(b.supplyApy)
+                      .plus(new BigNumber(b.supplyVenusApy))
+                      .isLessThan(0.01)
+                      ? '0.01'
+                      : new BigNumber(b.supplyApy).plus(
+                          new BigNumber(b.supplyVenusApy)
+                        );
+                    return sortInfo.sort === 'desc'
+                      ? +bAPY.minus(aAPY).toString(10)
+                      : +aAPY.minus(bAPY).toString(10);
                   }
                   if (sortInfo.field === 'total_borrow') {
-                    return sortInfo.sort === 'desc' ? 
-                      +new BigNumber(b.totalBorrowsUsd).minus(new BigNumber(a.totalBorrowsUsd)).toString(10) :
-                      +new BigNumber(a.totalBorrowsUsd).minus(new BigNumber(b.totalBorrowsUsd)).toString(10)
+                    return sortInfo.sort === 'desc'
+                      ? +new BigNumber(b.totalBorrowsUsd)
+                          .minus(new BigNumber(a.totalBorrowsUsd))
+                          .toString(10)
+                      : +new BigNumber(a.totalBorrowsUsd)
+                          .minus(new BigNumber(b.totalBorrowsUsd))
+                          .toString(10);
                   }
                   if (sortInfo.field === 'borrow_apy') {
-                    const aAPY = new BigNumber(a.borrowApy).plus(new BigNumber(a.borrowVenusApy)).isLessThan(0.01) ? '0.01' : new BigNumber(a.borrowApy).plus(new BigNumber(a.borrowVenusApy));
-                    const bAPY = new BigNumber(b.borrowApy).plus(new BigNumber(b.borrowVenusApy)).isLessThan(0.01) ? '0.01' : new BigNumber(b.borrowApy).plus(new BigNumber(b.borrowVenusApy));
-                    return sortInfo.sort === 'desc' ? 
-                      +bAPY.minus(aAPY).toString(10) :
-                      +aAPY.minus(bAPY).toString(10)
+                    const aAPY = new BigNumber(a.borrowApy)
+                      .plus(new BigNumber(a.borrowVenusApy))
+                      .isLessThan(0.01)
+                      ? '0.01'
+                      : new BigNumber(a.borrowApy).plus(
+                          new BigNumber(a.borrowVenusApy)
+                        );
+                    const bAPY = new BigNumber(b.borrowApy)
+                      .plus(new BigNumber(b.borrowVenusApy))
+                      .isLessThan(0.01)
+                      ? '0.01'
+                      : new BigNumber(b.borrowApy).plus(
+                          new BigNumber(b.borrowVenusApy)
+                        );
+                    return sortInfo.sort === 'desc'
+                      ? +bAPY.minus(aAPY).toString(10)
+                      : +aAPY.minus(bAPY).toString(10);
                   }
                   if (sortInfo.field === 'liquidity') {
-                    return sortInfo.sort === 'desc' ? 
-                      +new BigNumber(b.liquidity).minus(new BigNumber(a.liquidity)).toString(10) :
-                      +new BigNumber(a.liquidity).minus(new BigNumber(b.liquidity)).toString(10)
+                    return sortInfo.sort === 'desc'
+                      ? +new BigNumber(b.liquidity)
+                          .minus(new BigNumber(a.liquidity))
+                          .toString(10)
+                      : +new BigNumber(a.liquidity)
+                          .minus(new BigNumber(b.liquidity))
+                          .toString(10);
                   }
                   if (sortInfo.field === 'price') {
-                    return sortInfo.sort === 'desc' ? 
-                      +new BigNumber(b.tokenPrice).minus(new BigNumber(a.tokenPrice)).toString(10) :
-                      +new BigNumber(a.tokenPrice).minus(new BigNumber(b.tokenPrice)).toString(10)
+                    return sortInfo.sort === 'desc'
+                      ? +new BigNumber(b.tokenPrice)
+                          .minus(new BigNumber(a.tokenPrice))
+                          .toString(10)
+                      : +new BigNumber(a.tokenPrice)
+                          .minus(new BigNumber(b.tokenPrice))
+                          .toString(10);
                   }
                 })
                 .map((item, index) => (
@@ -290,58 +390,132 @@ function Market({ history, settings }) {
                       history.push(`/market/${item.underlyingSymbol}`)
                     }
                   >
-                    <Col xs={{ span: 24 }} lg={{ span: 2 }} className="flex align-center market">
+                    <Col
+                      xs={{ span: 24 }}
+                      lg={{ span: 2 }}
+                      className="flex align-center market"
+                    >
                       <img
                         className="asset-img"
-                        src={constants.CONTRACT_TOKEN_ADDRESS[item.underlyingSymbol.toLowerCase()] ? constants.CONTRACT_TOKEN_ADDRESS[item.underlyingSymbol.toLowerCase()].asset : null}
+                        src={
+                          constants.CONTRACT_TOKEN_ADDRESS[
+                            item.underlyingSymbol.toLowerCase()
+                          ]
+                            ? constants.CONTRACT_TOKEN_ADDRESS[
+                                item.underlyingSymbol.toLowerCase()
+                              ].asset
+                            : null
+                        }
                         alt="asset"
                       />
                       <p className="item-title">{item.underlyingSymbol}</p>
                     </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 4 }} className="total-supply right">
+                    <Col
+                      xs={{ span: 24 }}
+                      lg={{ span: 4 }}
+                      className="total-supply right"
+                    >
                       <p className="mobile-label">Total Supply</p>
                       <p className="item-title">
                         {currencyFormatter(item.totalSupplyUsd)}
                       </p>
-                      <p className="item-value">{format(new BigNumber(item.totalSupplyUsd).div(new BigNumber(item.tokenPrice)).dp(0, 1).toString(10))} {item.underlyingSymbol}</p>
+                      <p className="item-value">
+                        {format(
+                          new BigNumber(item.totalSupplyUsd)
+                            .div(new BigNumber(item.tokenPrice))
+                            .dp(0, 1)
+                            .toString(10)
+                        )}{' '}
+                        {item.underlyingSymbol}
+                      </p>
                     </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 3 }} className="supply-apy right">
+                    <Col
+                      xs={{ span: 24 }}
+                      lg={{ span: 3 }}
+                      className="supply-apy right"
+                    >
                       <p className="mobile-label">Supply APY</p>
                       <p className="item-title">
-                        {new BigNumber(item.supplyApy).plus(new BigNumber(item.supplyVenusApy)).isLessThan(0.01) ? '0.01' : new BigNumber(item.supplyApy).plus(new BigNumber(item.supplyVenusApy)).dp(2, 1).toString(10)}%
+                        {new BigNumber(item.supplyApy)
+                          .plus(new BigNumber(item.supplyVenusApy))
+                          .isLessThan(0.01)
+                          ? '0.01'
+                          : new BigNumber(item.supplyApy)
+                              .plus(new BigNumber(item.supplyVenusApy))
+                              .dp(2, 1)
+                              .toString(10)}
+                        %
                       </p>
                       <p className="item-value">
-                        {new BigNumber(item.supplyVenusApy).dp(2, 1).toString(10)}%
+                        {new BigNumber(item.supplyVenusApy)
+                          .dp(2, 1)
+                          .toString(10)}
+                        %
                       </p>
                     </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 4 }} className="total-borrow right">
+                    <Col
+                      xs={{ span: 24 }}
+                      lg={{ span: 4 }}
+                      className="total-borrow right"
+                    >
                       <p className="mobile-label">Total Borrow</p>
                       <p className="item-title">
                         {currencyFormatter(item.totalBorrowsUsd)}
                       </p>
-                      <p className="item-value">{format(new BigNumber(item.totalBorrowsUsd).div(new BigNumber(item.tokenPrice)).dp(0, 1).toString(10))} {item.underlyingSymbol}</p>
+                      <p className="item-value">
+                        {format(
+                          new BigNumber(item.totalBorrowsUsd)
+                            .div(new BigNumber(item.tokenPrice))
+                            .dp(0, 1)
+                            .toString(10)
+                        )}{' '}
+                        {item.underlyingSymbol}
+                      </p>
                     </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 3 }} className="borrow-apy right">
+                    <Col
+                      xs={{ span: 24 }}
+                      lg={{ span: 3 }}
+                      className="borrow-apy right"
+                    >
                       <p className="mobile-label">Borrow APY</p>
                       <p className="item-title">
-                        {new BigNumber(item.borrowApy).plus(new BigNumber(item.borrowVenusApy)).isLessThan(0.01) ? '0.01' : new BigNumber(item.borrowApy).plus(new BigNumber(item.borrowVenusApy)).dp(2, 1).toString(10)}%
+                        {new BigNumber(item.borrowApy)
+                          .plus(new BigNumber(item.borrowVenusApy))
+                          .isLessThan(0.01)
+                          ? '0.01'
+                          : new BigNumber(item.borrowApy)
+                              .plus(new BigNumber(item.borrowVenusApy))
+                              .dp(2, 1)
+                              .toString(10)}
+                        %
                       </p>
                       <p className="item-value">
-                        {new BigNumber(item.borrowVenusApy).dp(2, 1).toString(10)}%
+                        {new BigNumber(item.borrowVenusApy)
+                          .dp(2, 1)
+                          .toString(10)}
+                        %
                       </p>
                     </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 4 }} className="liquidity right">
+                    <Col
+                      xs={{ span: 24 }}
+                      lg={{ span: 4 }}
+                      className="liquidity right"
+                    >
                       <p className="mobile-label">Liquidity</p>
                       <p className="item-title">
                         {currencyFormatter(item.liquidity)}
                       </p>
                     </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 4 }} className="price right">
+                    <Col
+                      xs={{ span: 24 }}
+                      lg={{ span: 4 }}
+                      className="price right"
+                    >
                       <p className="mobile-label">Price</p>
                       <p className="item-title">
                         {currencyFormatter(item.tokenPrice)}
                       </p>
-                      <p className="item-value"></p>
+                      <p className="item-value" />
                     </Col>
                   </Row>
                 ))}

@@ -69,13 +69,15 @@ function SupplyMarket({ settings, suppliedAssets, remainAssets }) {
       } else {
         toast.error({
           title: `Collateral Required`,
-          description: 'You need to set collateral at least one asset for your borrowed assets. Please repay all borrowed asset or set other asset as collateral.'
+          description:
+            'You need to set collateral at least one asset for your borrowed assets. Please repay all borrowed asset or set other asset as collateral.'
         });
       }
     } else {
       toast.error({
         title: `Collateral Required`,
-        description: 'You need to set collateral at least one asset for your borrowed assets. Please repay all borrowed asset or set other asset as collateral.'
+        description:
+          'You need to set collateral at least one asset for your borrowed assets. Please repay all borrowed asset or set other asset as collateral.'
       });
     }
   };
@@ -117,7 +119,9 @@ function SupplyMarket({ settings, suppliedAssets, remainAssets }) {
             <div className="apy-content">
               <Icon type="arrow-up" />
               <div className="apy-green-label">
-                {new BigNumber(apy).isGreaterThan(100000000) ? 'Infinity' : `${apy.dp(2, 1).toString(10)}%`}
+                {new BigNumber(apy).isGreaterThan(100000000)
+                  ? 'Infinity'
+                  : `${apy.dp(2, 1).toString(10)}%`}
               </div>
             </div>
           )
@@ -191,7 +195,9 @@ function SupplyMarket({ settings, suppliedAssets, remainAssets }) {
             <div className="apy-content">
               <Icon type="arrow-up" />
               <div className="apy-green-label">
-                {new BigNumber(apy).isGreaterThan(100000000) ? 'Infinity' : `${apy.dp(2, 1).toString(10)}%`}
+                {new BigNumber(apy).isGreaterThan(100000000)
+                  ? 'Infinity'
+                  : `${apy.dp(2, 1).toString(10)}%`}
               </div>
             </div>
           )

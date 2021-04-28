@@ -75,11 +75,11 @@ function MintTab({ settings }) {
           ],
           settings.selectedAddress
         )
-        .then(res => {
+        .then(() => {
           setAmount(new BigNumber(0));
           setIsLoading(false);
         })
-        .catch(err => {
+        .catch(() => {
           setIsLoading(false);
         });
     }
@@ -127,7 +127,13 @@ function MintTab({ settings }) {
               </div>
             </div>
             <span>
-              {!amount.isNaN() ? new BigNumber(amount).times(feePercent / 100).dp(4).toString(10) : 0} VAI ({feePercent.toString(10)}%)
+              {!amount.isNaN()
+                ? new BigNumber(amount)
+                    .times(feePercent / 100)
+                    .dp(4)
+                    .toString(10)
+                : 0}{' '}
+              VAI ({feePercent.toString(10)}%)
             </span>
           </div>
         </div>

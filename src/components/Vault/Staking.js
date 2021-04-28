@@ -192,7 +192,10 @@ function Staking({
     <Card>
       <StakingWrapper>
         <div className="stake-section">
-          <div className="stake-info">Available VAI to stake: {format(availableVai.dp(4, 1).toString(10))} VAI</div>
+          <div className="stake-info">
+            Available VAI to stake: {format(availableVai.dp(4, 1).toString(10))}{' '}
+            VAI
+          </div>
           {!isEnabled ? (
             <p className="stake-warning">
               To stake VAI, you need to approve it first.
@@ -241,7 +244,9 @@ function Staking({
           )}
         </div>
         <div className="stake-section">
-          <div className="stake-info">VAI staked: {format(vaiStaked.dp(4, 1).toString(10))} VAI</div>
+          <div className="stake-info">
+            VAI staked: {format(vaiStaked.dp(4, 1).toString(10))} VAI
+          </div>
           <div className="stake-input">
             <NumberFormat
               autoFocus

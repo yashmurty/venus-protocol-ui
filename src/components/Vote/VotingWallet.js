@@ -43,7 +43,8 @@ const VotingWalletWrapper = styled.div`
       margin-right: 9px;
     }
 
-    a, p {
+    a,
+    p {
       font-size: 16px;
       font-weight: bold;
       color: var(--color-orange);
@@ -233,7 +234,10 @@ function VotingWallet({
                 >
                   {delegateStatus === 'self'
                     ? 'Self'
-                    : `${delegateAddress.substr(0, 4)}...${delegateAddress.substr(
+                    : `${delegateAddress.substr(
+                        0,
+                        4
+                      )}...${delegateAddress.substr(
                         delegateAddress.length - 4,
                         4
                       )}`}
@@ -254,16 +258,19 @@ function VotingWallet({
           <div className="flex flex-column setup">
             <p className="setup-header">Setup Voting</p>
             <p className="setup-content">
-              You can either vote on each proposal yourself or delegate your votes
-              to a third party. Venus Governance puts you in charge of the future of
-              Venus.
+              You can either vote on each proposal yourself or delegate your
+              votes to a third party. Venus Governance puts you in charge of the
+              future of Venus.
               {/* <a href="/#">Learn more.</a> */}
             </p>
           </div>
         )}
         {settings.selectedAddress && !delegateStatus && (
           <div className="center footer">
-            <Button className="started-btn" onClick={() => setIsOpenModal(true)}>
+            <Button
+              className="started-btn"
+              onClick={() => setIsOpenModal(true)}
+            >
               Get Started
             </Button>
           </div>
@@ -286,7 +293,7 @@ VotingWallet.propTypes = {
   vaiMint: PropTypes.string.isRequired,
   settings: PropTypes.object.isRequired,
   delegateAddress: PropTypes.string.isRequired,
-  delegateStatus: PropTypes.string.isRequired,
+  delegateStatus: PropTypes.string.isRequired
 };
 
 const mapStateToProps = ({ account }) => ({

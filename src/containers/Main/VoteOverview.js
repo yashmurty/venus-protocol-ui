@@ -137,9 +137,13 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
   const loadVotes = useCallback(
     async limit => {
       if (proposalInfo.id) {
-        await promisify(getVoters, { id: proposalInfo.id, limit, filter: 'for' })
+        await promisify(getVoters, {
+          id: proposalInfo.id,
+          limit,
+          filter: 'for'
+        })
           .then(res => setAgreeVotes(res.data || {}))
-          .catch(err => {
+          .catch(() => {
             setAgreeVotes({});
           });
         await promisify(getVoters, {
@@ -148,7 +152,7 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
           filter: 'against'
         })
           .then(res => setAgainstVotes(res.data || {}))
-          .catch(err => {
+          .catch(() => {
             setAgainstVotes({});
           });
       }
@@ -184,7 +188,7 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
         filter: 'for'
       })
         .then(res => setAgreeVotes(res.data || {}))
-        .catch(err => {
+        .catch(() => {
           setAgreeVotes({});
         });
     } else if (againstVotes.total) {
@@ -194,7 +198,7 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
         filter: 'against'
       })
         .then(res => setAgainstVotes(res.data || {}))
-        .catch(err => {
+        .catch(() => {
           setAgainstVotes({});
         });
     }
@@ -229,14 +233,14 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
           [proposalInfo.id],
           settings.selectedAddress
         )
-        .then(res => {
+        .then(() => {
           setIsLoading(false);
           setStatus('success');
           toast.success({
             title: `Proposal list will be updated within a few seconds`
           });
         })
-        .catch(err => {
+        .catch(() => {
           setIsLoading(false);
           setStatus('failure');
         });
@@ -293,7 +297,10 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
                   addressNumber={
                     isNaN(BigNumber(agreeVotes.total)) ? 0 : agreeVotes.total
                   }
-                  emptyNumber={4 - (isNaN(BigNumber(agreeVotes.total)) ? 0 : agreeVotes.total)}
+                  emptyNumber={
+                    4 -
+                    (isNaN(BigNumber(agreeVotes.total)) ? 0 : agreeVotes.total)
+                  }
                   list={
                     agreeVotes.result &&
                     agreeVotes.result.map(v => ({
@@ -319,9 +326,16 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
                   }
                   type="against"
                   addressNumber={
-                    isNaN(BigNumber(againstVotes.total)) ? 0 : againstVotes.total
+                    isNaN(BigNumber(againstVotes.total))
+                      ? 0
+                      : againstVotes.total
                   }
-                  emptyNumber={4 - (isNaN(BigNumber(againstVotes.total)) ? 0 : againstVotes.total)}
+                  emptyNumber={
+                    4 -
+                    (isNaN(BigNumber(againstVotes.total))
+                      ? 0
+                      : againstVotes.total)
+                  }
                   list={
                     againstVotes.result &&
                     againstVotes.result.map(v => ({
@@ -340,10 +354,17 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
                   <div className="flex align-center just-center update-proposal-status">
                     <Button
                       className="cancel-btn"
-                      disabled={isCancelLoading || proposerVotingWeight >= proposalThreshold || cancelStatus === 'success'}
+                      disabled={
+                        isCancelLoading ||
+                        proposerVotingWeight >= proposalThreshold ||
+                        cancelStatus === 'success'
+                      }
                       onClick={() => handleUpdateProposal('Cancel')}
                     >
-                      {isCancelLoading && <Icon type="loading" />} {(cancelStatus === 'pending' || cancelStatus === 'failure') ? 'Cancel' : 'Cancelled'}
+                      {isCancelLoading && <Icon type="loading" />}{' '}
+                      {cancelStatus === 'pending' || cancelStatus === 'failure'
+                        ? 'Cancel'
+                        : 'Cancelled'}
                     </Button>
                     {proposalInfo.state === 'Succeeded' && (
                       <Button
@@ -351,21 +372,35 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
                         disabled={isLoading || status === 'success'}
                         onClick={() => handleUpdateProposal('Queue')}
                       >
-                        {isLoading && <Icon type="loading" />} {(status === 'pending' || status === 'failure') ? 'Queue' : 'Queued'}
+                        {isLoading && <Icon type="loading" />}{' '}
+                        {status === 'pending' || status === 'failure'
+                          ? 'Queue'
+                          : 'Queued'}
                       </Button>
                     )}
                     {proposalInfo.state === 'Queued' && (
                       <Button
                         className="execute-btn"
-                        disabled={isLoading || status === 'success' || !isPossibleExcuted}
+                        disabled={
+                          isLoading ||
+                          status === 'success' ||
+                          !isPossibleExcuted
+                        }
                         onClick={() => handleUpdateProposal('Execute')}
                       >
-                        {isLoading && <Icon type="loading" />} {(status === 'pending' || status === 'failure') ? 'Execute' : 'Executed'}
+                        {isLoading && <Icon type="loading" />}{' '}
+                        {status === 'pending' || status === 'failure'
+                          ? 'Execute'
+                          : 'Executed'}
                       </Button>
                     )}
                     {proposalInfo.state === 'Queued' && !isPossibleExcuted && (
                       <Tooltip title={`You are able to excute at ${excuteEta}`}>
-                        <Icon className="pointer" type="info-circle" theme="filled" />
+                        <Icon
+                          className="pointer"
+                          type="info-circle"
+                          theme="filled"
+                        />
                       </Tooltip>
                     )}
                   </div>
@@ -375,7 +410,8 @@ function VoteOverview({ settings, getVoters, getProposalById, match }) {
                 proposalInfo.state !== 'Canceled' &&
                 proposerVotingWeight >= proposalThreshold && (
                   <p className="center warning">
-                    You can't cancel the proposal while the proposer voting weight meets proposal threshold
+                    You can't cancel the proposal while the proposer voting
+                    weight meets proposal threshold
                   </p>
                 )}
             </div>

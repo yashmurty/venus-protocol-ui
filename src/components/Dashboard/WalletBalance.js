@@ -120,8 +120,12 @@ function WalletBalance({ settings, setSetting }) {
         xvsSupplyApy,
         xvsBorrowApy
       } = asset;
-      const supplyBalanceUSD = getBigNumber(supplyBalance).times(getBigNumber(tokenPrice));
-      const borrowBalanceUSD = getBigNumber(borrowBalance).times(getBigNumber(tokenPrice));
+      const supplyBalanceUSD = getBigNumber(supplyBalance).times(
+        getBigNumber(tokenPrice)
+      );
+      const borrowBalanceUSD = getBigNumber(borrowBalance).times(
+        getBigNumber(tokenPrice)
+      );
       totalSupplied = totalSupplied.plus(supplyBalanceUSD);
       totalBorrowed = totalSupplied.plus(borrowBalanceUSD);
 

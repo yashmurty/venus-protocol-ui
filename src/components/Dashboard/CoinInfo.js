@@ -66,8 +66,13 @@ function CoinInfo({ settings }) {
   const updateBalance = useCallback(async () => {
     if (window.ethereum && checkIsValidNetwork() && settings.selectedAddress) {
       const xvsTokenContract = getTokenContract('xvs');
-      let temp = await methods.call(xvsTokenContract.methods.balanceOf, [settings.selectedAddress]);
-      temp = new BigNumber(temp).dividedBy(new BigNumber(10).pow(18)).dp(4, 1).toString(10);
+      let temp = await methods.call(xvsTokenContract.methods.balanceOf, [
+        settings.selectedAddress
+      ]);
+      temp = new BigNumber(temp)
+        .dividedBy(new BigNumber(10).pow(18))
+        .dp(4, 1)
+        .toString(10);
       setBalance(temp);
       setAddress(settings.selectedAddress);
     }
@@ -107,7 +112,10 @@ function CoinInfo({ settings }) {
           onClick={() => handleLink()}
         >
           <p className="highlight">
-            {`${address.substr(0, 4)}...${address.substr(address.length - 4, 4)}`}
+            {`${address.substr(0, 4)}...${address.substr(
+              address.length - 4,
+              4
+            )}`}
           </p>
           <div className="flex align-center just-center copy-btn">
             <Icon type="arrow-right" />
