@@ -35,7 +35,7 @@ const ProposerInfoWrapper = styled.div`
   }
 `;
 
-function ProposerInfo({ address, history }) {
+function ProposerInfo({ address }) {
   const handleLink = () => {
     window.open(
       `${process.env.REACT_APP_BSC_EXPLORER}/address/${address}`,
@@ -49,7 +49,9 @@ function ProposerInfo({ address, history }) {
           {`${address.substr(0, 4)}...${address.substr(address.length - 4, 4)}`}
         </div>
         <div className="flex just-between align-center">
-          <span className="highlight pointer" onClick={() => handleLink()}>{address}</span>
+          <span className="highlight pointer" onClick={() => handleLink()}>
+            {address}
+          </span>
           <CopyToClipboard
             text={address}
             onCopy={() => {
@@ -67,13 +69,11 @@ function ProposerInfo({ address, history }) {
 }
 
 ProposerInfo.propTypes = {
-  address: PropTypes.string,
-  history: PropTypes.object
+  address: PropTypes.string
 };
 
 ProposerInfo.defaultProps = {
-  address: '',
-  history: {}
+  address: ''
 };
 
 export default compose(withRouter)(ProposerInfo);

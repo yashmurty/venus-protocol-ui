@@ -107,14 +107,6 @@ function VoterLeaderboard({ history, getVoterAccounts }) {
         setVoterAccounts([]);
       });
   }, []);
-  const handleAddLink = (type, v) => {
-    window.open(
-      `${process.env.REACT_APP_EXPLORER}/${
-        type === 'address' ? 'address' : 'tx'
-      }/${v}`,
-      '_blank'
-    );
-  };
 
   return (
     <MainLayout title="Leaderboard">

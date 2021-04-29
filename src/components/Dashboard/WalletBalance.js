@@ -102,7 +102,7 @@ function WalletBalance({ settings, setSetting }) {
         );
       }
     },
-    [settings.selectedAddress]
+    [settings]
   );
 
   const updateNetAPY = useCallback(async () => {
@@ -120,8 +120,12 @@ function WalletBalance({ settings, setSetting }) {
         xvsSupplyApy,
         xvsBorrowApy
       } = asset;
-      const supplyBalanceUSD = getBigNumber(supplyBalance).times(getBigNumber(tokenPrice));
-      const borrowBalanceUSD = getBigNumber(borrowBalance).times(getBigNumber(tokenPrice));
+      const supplyBalanceUSD = getBigNumber(supplyBalance).times(
+        getBigNumber(tokenPrice)
+      );
+      const borrowBalanceUSD = getBigNumber(borrowBalance).times(
+        getBigNumber(tokenPrice)
+      );
       totalSupplied = totalSupplied.plus(supplyBalanceUSD);
       totalBorrowed = totalSupplied.plus(borrowBalanceUSD);
 
@@ -210,7 +214,10 @@ function WalletBalance({ settings, setSetting }) {
                   '🔥 APY with XVS'
                 ) : (
                   <div>
-                    <span className="emoji">🔥</span>APY without XVS
+                    <span className="emoji" role="img" aria-label="information">
+                      🔥
+                    </span>
+                    APY without XVS
                   </div>
                 )}
               </Label>
@@ -237,7 +244,8 @@ function WalletBalance({ settings, setSetting }) {
 }
 
 WalletBalance.propTypes = {
-  settings: PropTypes.object
+  settings: PropTypes.object,
+  setSetting: PropTypes.func.isRequired
 };
 
 WalletBalance.defaultProps = {

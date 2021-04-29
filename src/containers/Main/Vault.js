@@ -60,35 +60,59 @@ function Vault({ settings }) {
     const compContract = getComptrollerContract();
 
     // total info
-    let venusVAIVaultRate = await methods.call(compContract.methods.venusVAIVaultRate, []);
-    venusVAIVaultRate = new BigNumber(venusVAIVaultRate).div(1e18).times(20 * 60 * 24);
+    let venusVAIVaultRate = await methods.call(
+      compContract.methods.venusVAIVaultRate,
+      []
+    );
+    venusVAIVaultRate = new BigNumber(venusVAIVaultRate)
+      .div(1e18)
+      .times(20 * 60 * 24);
     setEmission(venusVAIVaultRate.dp(2, 1).toString(10));
 
     const vaiContract = getVaiTokenContract();
-    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [constants.CONTRACT_VAI_VAULT_ADDRESS]);
-    vaiBalance = new BigNumber(vaiBalance).div(1e18).dp(4, 1).toString(10);
+    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
+      constants.CONTRACT_VAI_VAULT_ADDRESS
+    ]);
+    vaiBalance = new BigNumber(vaiBalance)
+      .div(1e18)
+      .dp(4, 1)
+      .toString(10);
     setTotalVaiStaked(vaiBalance);
 
     const vaultContract = getVaiVaultContract();
     // let amount = await methods.call(vaultContract.methods.pendingRewards, []);
     // amount = new BigNumber(amount).div(1e18).dp(4, 1).toString(10);
     const xvsTokenContract = getTokenContract('xvs');
-    let amount = await methods.call(xvsTokenContract.methods.balanceOf, [constants.CONTRACT_VAI_VAULT_ADDRESS]);
-    amount = new BigNumber(amount).div(1e18).dp(4, 1).toString(10);
+    let amount = await methods.call(xvsTokenContract.methods.balanceOf, [
+      constants.CONTRACT_VAI_VAULT_ADDRESS
+    ]);
+    amount = new BigNumber(amount)
+      .div(1e18)
+      .dp(4, 1)
+      .toString(10);
     setPendingRewards(amount);
 
     // user info
     const tokenContract = getVaiTokenContract();
-    let availableAmount = await methods.call(tokenContract.methods.balanceOf, [settings.selectedAddress]);
+    let availableAmount = await methods.call(tokenContract.methods.balanceOf, [
+      settings.selectedAddress
+    ]);
     availableAmount = new BigNumber(availableAmount).div(1e18);
     setAvailableVai(availableAmount);
 
-    const { 0: staked } = await methods.call(vaultContract.methods.userInfo, [settings.selectedAddress]);
+    const { 0: staked } = await methods.call(vaultContract.methods.userInfo, [
+      settings.selectedAddress
+    ]);
     amount = new BigNumber(staked).div(1e18);
     setVaiStaked(amount);
 
-    amount = await methods.call(vaultContract.methods.pendingXVS, [settings.selectedAddress]);
-    amount = new BigNumber(amount).div(1e18).dp(4, 1).toString(10);
+    amount = await methods.call(vaultContract.methods.pendingXVS, [
+      settings.selectedAddress
+    ]);
+    amount = new BigNumber(amount)
+      .div(1e18)
+      .dp(4, 1)
+      .toString(10);
     setVaiReward(amount);
 
     // isEnabled

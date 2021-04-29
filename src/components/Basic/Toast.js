@@ -34,8 +34,10 @@ function toast(
 }
 
 toast.info = (content, options) => toast({ ...content, type: 'info' }, options);
-toast.error = (content, options) => toast({ ...content, type: 'error' }, options);
-toast.success = (content, options) => toast({ ...content, type: 'success' }, options);
+toast.error = (content, options) =>
+  toast({ ...content, type: 'error' }, options);
+toast.success = (content, options) =>
+  toast({ ...content, type: 'success' }, options);
 toast.update = toastify.update;
 
 export default toast;

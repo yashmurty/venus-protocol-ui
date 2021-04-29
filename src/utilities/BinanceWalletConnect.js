@@ -38,7 +38,9 @@ export default class BinanceWalletConnectClass {
   getVbepContract = name => {
     return new this.web3.eth.Contract(
       JSON.parse(
-        name !== 'bnb' ? constants.CONTRACT_VBEP_ABI : constants.CONTRACT_VBNB_ABI
+        name !== 'bnb'
+          ? constants.CONTRACT_VBEP_ABI
+          : constants.CONTRACT_VBNB_ABI
       ),
       constants.CONTRACT_VBEP_ADDRESS[name || 'usdc']
         ? constants.CONTRACT_VBEP_ADDRESS[name || 'usdc'].address
@@ -67,9 +69,11 @@ export default class BinanceWalletConnectClass {
         tx
       })
         .then(result => {
+          // eslint-disable-next-line no-console
           console.log('result', result);
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('error', error);
         });
     } catch (err) {
@@ -92,9 +96,11 @@ export default class BinanceWalletConnectClass {
         tx
       })
         .then(result => {
+          // eslint-disable-next-line no-console
           console.log('result', result);
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('error', error);
         });
     } catch (err) {
@@ -106,7 +112,9 @@ export default class BinanceWalletConnectClass {
   async sendApprove(assetName, from, vtokenAddress, amount, callback) {
     try {
       const contract = this.getTokenContract(assetName);
-      const contractData = contract.methods.approve(vtokenAddress, amount).encodeABI();
+      const contractData = contract.methods
+        .approve(vtokenAddress, amount)
+        .encodeABI();
 
       const tx = {
         from,
@@ -117,9 +125,11 @@ export default class BinanceWalletConnectClass {
         tx
       })
         .then(result => {
+          // eslint-disable-next-line no-console
           console.log('result', result);
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('error', error);
         });
     } catch (err) {
@@ -143,9 +153,11 @@ export default class BinanceWalletConnectClass {
         tx
       })
         .then(result => {
+          // eslint-disable-next-line no-console
           console.log('result', result);
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('error', error);
         });
     } catch (err) {
@@ -168,9 +180,11 @@ export default class BinanceWalletConnectClass {
         tx
       })
         .then(result => {
+          // eslint-disable-next-line no-console
           console.log('result', result);
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('error', error);
         });
     } catch (err) {
@@ -182,7 +196,9 @@ export default class BinanceWalletConnectClass {
   async sendRedeemUnderlying(assetName, from, amount, callback) {
     try {
       const contract = this.getVbepContract(assetName);
-      const contractData = contract.methods.redeemUnderlying(amount).encodeABI();
+      const contractData = contract.methods
+        .redeemUnderlying(amount)
+        .encodeABI();
 
       const tx = {
         from,
@@ -193,9 +209,11 @@ export default class BinanceWalletConnectClass {
         tx
       })
         .then(result => {
+          // eslint-disable-next-line no-console
           console.log('result', result);
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('error', error);
         });
     } catch (err) {
@@ -219,9 +237,11 @@ export default class BinanceWalletConnectClass {
         tx
       })
         .then(result => {
+          // eslint-disable-next-line no-console
           console.log('result', result);
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('error', error);
         });
     } catch (err) {
@@ -244,9 +264,11 @@ export default class BinanceWalletConnectClass {
         tx
       })
         .then(result => {
+          // eslint-disable-next-line no-console
           console.log('result', result);
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('error', error);
         });
     } catch (err) {

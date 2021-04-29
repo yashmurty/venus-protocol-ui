@@ -119,14 +119,14 @@ const InterestRateModelWrapper = styled.div`
 
 let flag = false;
 
-function InterestRateModel({ settings, currentAsset, history }) {
+function InterestRateModel({ settings, currentAsset }) {
   const [graphData, setGraphData] = useState([]);
   const [tickerPos, setTickerPos] = useState(null);
   const [percent, setPercent] = useState(null);
   const [currentPercent, setCurrentPercent] = useState(0);
   const [currentPos, setCurrentPos] = useState(30);
 
-  const CustomizedAxisTick = ({ x, y, stroke, payload }) => {
+  const CustomizedAxisTick = ({ x, y }) => {
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16}>
@@ -134,6 +134,10 @@ function InterestRateModel({ settings, currentAsset, history }) {
         </text>
       </g>
     );
+  };
+  CustomizedAxisTick.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired
   };
 
   const getGraphData = async asset => {
@@ -144,8 +148,14 @@ function InterestRateModel({ settings, currentAsset, history }) {
       []
     );
     const interestModelContract = getInterestModelContract(interestRateModel);
-    const multiplierPerBlock = await methods.call(interestModelContract.methods.multiplierPerBlock, []);
-    const baseRatePerBlock = await methods.call(interestModelContract.methods.baseRatePerBlock, []);
+    const multiplierPerBlock = await methods.call(
+      interestModelContract.methods.multiplierPerBlock,
+      []
+    );
+    const baseRatePerBlock = await methods.call(
+      interestModelContract.methods.baseRatePerBlock,
+      []
+    );
     const data = [];
     const marketInfo = settings.markets.find(
       item => item.underlyingSymbol.toLowerCase() === asset.toLowerCase()
@@ -157,10 +167,17 @@ function InterestRateModel({ settings, currentAsset, history }) {
     let cash = await methods.call(vbepContract.methods.getCash, []);
     cash = new BigNumber(cash).div(new BigNumber(10).pow(18));
     const borrows = new BigNumber(marketInfo.totalBorrows2);
-    const reserves = new BigNumber(marketInfo.totalReserves || 0).div(new BigNumber(10).pow(settings.decimals[asset].token));
-    const currentUtilizationRate = borrows.div(cash.plus(borrows).minus(reserves));
+    const reserves = new BigNumber(marketInfo.totalReserves || 0).div(
+      new BigNumber(10).pow(settings.decimals[asset].token)
+    );
+    const currentUtilizationRate = borrows.div(
+      cash.plus(borrows).minus(reserves)
+    );
 
-    const tempCurrentPercent = parseInt(+currentUtilizationRate.toString(10) * 100, 10);
+    const tempCurrentPercent = parseInt(
+      +currentUtilizationRate.toString(10) * 100,
+      10
+    );
     setCurrentPercent(tempCurrentPercent || 0);
     const lineElement = document.getElementById('line');
     if (lineElement) {
@@ -169,20 +186,36 @@ function InterestRateModel({ settings, currentAsset, history }) {
     for (let i = 0; i <= 1; i += 0.01) {
       const utilizationRate = i;
       // Borrow Rate
-      const borrowRate = new BigNumber(utilizationRate).multipliedBy(new BigNumber(multiplierPerBlock)).plus(new BigNumber(baseRatePerBlock));
+      const borrowRate = new BigNumber(utilizationRate)
+        .multipliedBy(new BigNumber(multiplierPerBlock))
+        .plus(new BigNumber(baseRatePerBlock));
 
       // Supply Rate
       const rateToPool = borrowRate.multipliedBy(oneMinusReserveFactor);
-      const supplyRate = new BigNumber(utilizationRate).multipliedBy(rateToPool);
+      const supplyRate = new BigNumber(utilizationRate).multipliedBy(
+        rateToPool
+      );
       // supply apy, borrow apy
       const blocksPerDay = 20 * 60 * 24;
       const daysPerYear = 365;
 
       const mantissa = new BigNumber(10).pow(18);
-      const supplyBase = supplyRate.div(mantissa).times(blocksPerDay).plus(1);
-      const borrowBase = borrowRate.div(mantissa).times(blocksPerDay).plus(1);
-      const supplyApy = supplyBase.pow(daysPerYear - 1).minus(1).times(100);
-      const borrowApy = borrowBase.pow(daysPerYear - 1).minus(1).times(100);
+      const supplyBase = supplyRate
+        .div(mantissa)
+        .times(blocksPerDay)
+        .plus(1);
+      const borrowBase = borrowRate
+        .div(mantissa)
+        .times(blocksPerDay)
+        .plus(1);
+      const supplyApy = supplyBase
+        .pow(daysPerYear - 1)
+        .minus(1)
+        .times(100);
+      const borrowApy = borrowBase
+        .pow(daysPerYear - 1)
+        .minus(1)
+        .times(100);
 
       data.push({
         percent: i,
@@ -210,7 +243,7 @@ function InterestRateModel({ settings, currentAsset, history }) {
     flag = false;
   }, [currentAsset]);
 
-  const CustomTooltip = ({ active, payload, label }) => {
+  const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length !== 0) {
       return (
         <div className="custom-tooltip">
@@ -224,6 +257,10 @@ function InterestRateModel({ settings, currentAsset, history }) {
       );
     }
     return null;
+  };
+  CustomTooltip.propTypes = {
+    active: PropTypes.bool.isRequired,
+    payload: PropTypes.array.isRequired
   };
 
   const handleMouseMove = e => {
@@ -243,7 +280,6 @@ function InterestRateModel({ settings, currentAsset, history }) {
       setCurrentPos(30 + (lineElement.clientWidth * currentPercent) / 100);
     }
   };
-
 
   return (
     <InterestRateModelWrapper>
@@ -301,8 +337,20 @@ function InterestRateModel({ settings, currentAsset, history }) {
             />
             <YAxis hide />
             <Tooltip cursor={false} content={<CustomTooltip />} />
-            <Line type="monotone" dot={false} dataKey="borrowApy" stroke={'url(#barRedColor)'} strokeWidth={2} />
-            <Line type="monotone" dot={false} dataKey="supplyApy" stroke={'url(#barGreenColor)'} strokeWidth={2} />
+            <Line
+              type="monotone"
+              dot={false}
+              dataKey="borrowApy"
+              stroke="url(#barRedColor)"
+              strokeWidth={2}
+            />
+            <Line
+              type="monotone"
+              dot={false}
+              dataKey="supplyApy"
+              stroke="url(#barGreenColor)"
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -311,13 +359,11 @@ function InterestRateModel({ settings, currentAsset, history }) {
 }
 
 InterestRateModel.propTypes = {
-  history: PropTypes.object,
   currentAsset: PropTypes.string,
   settings: PropTypes.object
 };
 
 InterestRateModel.defaultProps = {
-  history: {},
   currentAsset: '',
   settings: {}
 };

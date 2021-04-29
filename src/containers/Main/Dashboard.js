@@ -16,8 +16,6 @@ import { connectAccount, accountActionCreators } from 'core';
 import LoadingSpinner from 'components/Basic/LoadingSpinner';
 import { Row, Column } from 'components/Basic/Style';
 import {
-  getTokenContract,
-  getVbepContract,
   getComptrollerContract,
   getVaiControllerContract,
   getVaiTokenContract,
@@ -25,8 +23,6 @@ import {
 } from 'utilities/ContractService';
 import BigNumber from 'bignumber.js';
 import * as constants from 'utilities/constants';
-import { promisify } from 'utilities';
-import { checkIsValidNetwork } from 'utilities/common';
 
 const DashboardWrapper = styled.div`
   height: 100%;
@@ -41,12 +37,9 @@ const SpinnerWrapper = styled.div`
   }
 `;
 
-let lockFlag = false;
-
-function Dashboard({ history, settings, setSetting }) {
+function Dashboard({ settings, setSetting }) {
   const updateMarketInfo = async () => {
     const accountAddress = settings.selectedAddress;
-    lockFlag = true;
     if (!accountAddress || !settings.decimals || !settings.markets) {
       return;
     }
@@ -54,11 +47,15 @@ function Dashboard({ history, settings, setSetting }) {
     const vaiControllerContract = getVaiControllerContract();
     const vaiContract = getVaiTokenContract();
     // vai amount in wallet
-    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [accountAddress]);
+    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
+      accountAddress
+    ]);
     vaiBalance = new BigNumber(vaiBalance).div(new BigNumber(10).pow(18));
 
     // minted vai amount
-    let vaiMinted = await methods.call(appContract.methods.mintedVAIs, [accountAddress]);
+    let vaiMinted = await methods.call(appContract.methods.mintedVAIs, [
+      accountAddress
+    ]);
     vaiMinted = new BigNumber(vaiMinted).div(new BigNumber(10).pow(18));
 
     // mintable vai amount
@@ -76,14 +73,12 @@ function Dashboard({ history, settings, setSetting }) {
     allowBalance = new BigNumber(allowBalance).div(new BigNumber(10).pow(18));
     const vaiEnabled = allowBalance.isGreaterThanOrEqualTo(vaiMinted);
 
-
     setSetting({
       vaiBalance,
       vaiEnabled,
       vaiMinted,
       mintableVai
     });
-    lockFlag = false;
   };
 
   const handleAccountChange = async () => {
@@ -147,14 +142,11 @@ function Dashboard({ history, settings, setSetting }) {
 }
 
 Dashboard.propTypes = {
-  history: PropTypes.object,
   settings: PropTypes.object,
-  setSetting: PropTypes.func.isRequired,
-  getGovernanceVenus: PropTypes.func.isRequired
+  setSetting: PropTypes.func.isRequired
 };
 
 Dashboard.defaultProps = {
-  history: {},
   settings: {}
 };
 
@@ -163,12 +155,11 @@ const mapStateToProps = ({ account }) => ({
 });
 
 const mapDispatchToProps = dispatch => {
-  const { setSetting, getGovernanceVenus } = accountActionCreators;
+  const { setSetting } = accountActionCreators;
 
   return bindActionCreators(
     {
-      setSetting,
-      getGovernanceVenus
+      setSetting
     },
     dispatch
   );

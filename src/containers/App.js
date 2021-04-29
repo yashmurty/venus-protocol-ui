@@ -69,9 +69,19 @@ class App extends React.Component {
                   path="/vote/leaderboard"
                   component={VoterLeaderboard}
                 />
-                <Route exact path="/vote/proposal/:id" component={VoteOverview} />
-                <Route exact path="/vote/address/:address" component={ProposerDetail} />
-                {process.env.REACT_APP_ENV === 'dev' && <Route exact path="/faucet" component={Faucet} />}
+                <Route
+                  exact
+                  path="/vote/proposal/:id"
+                  component={VoteOverview}
+                />
+                <Route
+                  exact
+                  path="/vote/address/:address"
+                  component={ProposerDetail}
+                />
+                {process.env.REACT_APP_ENV === 'dev' && (
+                  <Route exact path="/faucet" component={Faucet} />
+                )}
                 <Redirect from="/" to="/dashboard" />
               </Switch>
             </BrowserRouter>

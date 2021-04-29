@@ -1,6 +1,5 @@
 import Web3 from 'web3'; // eslint-disable-line import/no-unresolved
 import WalletConnect from '@walletconnect/client';
-import BigNumber from 'bignumber.js';
 import * as constants from 'utilities/constants';
 
 const TOKEN_ABI = {
@@ -129,7 +128,9 @@ export default class WalletConnectClass {
   getVbepContract = name => {
     return new this.web3.eth.Contract(
       JSON.parse(
-        name !== 'bnb' ? constants.CONTRACT_VBEP_ABI : constants.CONTRACT_VBNB_ABI
+        name !== 'bnb'
+          ? constants.CONTRACT_VBEP_ABI
+          : constants.CONTRACT_VBNB_ABI
       ),
       constants.CONTRACT_VBEP_ADDRESS[name || 'usdc']
         ? constants.CONTRACT_VBEP_ADDRESS[name || 'usdc'].address

@@ -51,7 +51,7 @@ function OverviewChart({ marketType, graphType, data }) {
     setActiveIndex(-1);
   }, [marketType]);
 
-  const CustomizedAxisTick = ({ x, y, stroke, payload }) => {
+  const CustomizedAxisTick = ({ x, y }) => {
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16}>
@@ -59,6 +59,10 @@ function OverviewChart({ marketType, graphType, data }) {
         </text>
       </g>
     );
+  };
+  CustomizedAxisTick.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired
   };
 
   const CustomChart1Tooltip = ({ active, payload, label }) => {
@@ -69,28 +73,40 @@ function OverviewChart({ marketType, graphType, data }) {
             {`${moment(label).format('LLL')}`}
           </p>
           <p className="label" style={{ color: 'white' }}>
-            {`${marketType === 'supply' ? 'Supply APY' : 'Borrow APY'} : ${new BigNumber(payload[0].value).dp(8, 1)}%`}
+            {`${
+              marketType === 'supply' ? 'Supply APY' : 'Borrow APY'
+            } : ${new BigNumber(payload[0].value).dp(8, 1)}%`}
           </p>
         </div>
       );
     }
     return null;
   };
-
-  const CustomChart2Tooltip = ({ active, payload, label }) => {
+  CustomChart1Tooltip.propTypes = {
+    active: PropTypes.bool.isRequired,
+    payload: PropTypes.array.isRequired,
+    label: PropTypes.string.isRequired
+  };
+  const CustomChart2Tooltip = ({ active, payload }) => {
     if (active && payload && payload.length !== 0) {
       return (
         <div className="custom-tooltip">
           <p className="label" style={{ color: 'white' }}>
-            {`${marketType === 'supply' ? 'Total Supply' : 'Total Borrow'} : ${currencyFormatter(payload[0].value ? payload[0].value : 0)}`}
+            {`${
+              marketType === 'supply' ? 'Total Supply' : 'Total Borrow'
+            } : ${currencyFormatter(payload[0].value ? payload[0].value : 0)}`}
           </p>
         </div>
       );
     }
     return null;
   };
+  CustomChart2Tooltip.propTypes = {
+    active: PropTypes.bool.isRequired,
+    payload: PropTypes.array.isRequired
+  };
 
-  const handleMouseMove = (data, index) => {
+  const handleMouseMove = index => {
     setActiveIndex(index);
   };
 
@@ -141,9 +157,17 @@ function OverviewChart({ marketType, graphType, data }) {
                 type="monotone"
                 isAnimationActive
                 dataKey={marketType === 'supply' ? 'supplyApy' : 'borrowApy'}
-                stroke={`${marketType !== 'supply' ? 'url(#barRedColor)' : 'url(#barGreenColor)'}`}
+                stroke={`${
+                  marketType !== 'supply'
+                    ? 'url(#barRedColor)'
+                    : 'url(#barGreenColor)'
+                }`}
                 strokeWidth={2}
-                fill={`${marketType !== 'supply' ? 'url(#areaRedColor)' : 'url(#areaGreenColor)'}`}
+                fill={`${
+                  marketType !== 'supply'
+                    ? 'url(#areaRedColor)'
+                    : 'url(#areaGreenColor)'
+                }`}
               />
             )}
             {graphType === 'composed' && (
@@ -152,7 +176,11 @@ function OverviewChart({ marketType, graphType, data }) {
                 dot={false}
                 isAnimationActive
                 dataKey={marketType === 'supply' ? 'supplyApy' : 'borrowApy'}
-                stroke={`${marketType !== 'supply' ? 'url(#barRedColor)' : 'url(#barGreenColor)'}`}
+                stroke={`${
+                  marketType !== 'supply'
+                    ? 'url(#barRedColor)'
+                    : 'url(#barGreenColor)'
+                }`}
                 strokeWidth={2}
               />
             )}
@@ -190,11 +218,25 @@ function OverviewChart({ marketType, graphType, data }) {
               <Tooltip cursor={false} content={<CustomChart2Tooltip />} />
               <Bar
                 isAnimationActive
-                dataKey={marketType === 'supply' ? 'totalSupply' : 'totalBorrow'}
+                dataKey={
+                  marketType === 'supply' ? 'totalSupply' : 'totalBorrow'
+                }
                 onMouseMove={handleMouseMove}
               >
                 {data.map((entry, index) => (
-                  <Cell cursor="pointer" fill={index === activeIndex ? `${marketType !== 'supply' ? 'url(#barRedColor)' : 'url(#barGreenColor)'}` : '#252a4a'} key={`cell-${index}`} />
+                  <Cell
+                    cursor="pointer"
+                    fill={
+                      index === activeIndex
+                        ? `${
+                            marketType !== 'supply'
+                              ? 'url(#barRedColor)'
+                              : 'url(#barGreenColor)'
+                          }`
+                        : '#252a4a'
+                    }
+                    key={`cell-${index}`}
+                  />
                 ))}
               </Bar>
             </BarChart>
@@ -206,7 +248,6 @@ function OverviewChart({ marketType, graphType, data }) {
 }
 
 OverviewChart.propTypes = {
-  settings: PropTypes.object,
   marketType: PropTypes.string,
   graphType: PropTypes.string,
   data: PropTypes.arrayOf(
@@ -220,8 +261,7 @@ OverviewChart.propTypes = {
 OverviewChart.defaultProps = {
   marketType: 'supply',
   graphType: 'area',
-  data: [],
-  settings: {}
+  data: []
 };
 
 const mapStateToProps = ({ account }) => ({

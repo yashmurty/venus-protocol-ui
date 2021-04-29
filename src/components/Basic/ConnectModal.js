@@ -10,7 +10,6 @@ import ledgerImg from 'assets/img/ledger.png';
 import arrowRightImg from 'assets/img/arrow-right.png';
 import closeImg from 'assets/img/close.png';
 import logoImg from 'assets/img/logo.png';
-import binanceImg from 'assets/img/binance.jpg';
 
 const ModalContent = styled.div`
   border-radius: 20px;
@@ -114,10 +113,7 @@ function ConnectModal({
   awaiting,
   onCancel,
   onConnectMetaMask,
-  onConnectWallet,
-  onConnectBinance,
-  onBack,
-  ...props
+  onBack
 }) {
   const MetaMaskStatus = () => {
     if (error && error.message === constants.NOT_INSTALLED) {
@@ -182,7 +178,9 @@ function ConnectModal({
           {!wcUri && (
             <>
               <div
-                className={`flex align-center just-between wallet-connect-btn ${process.env.REACT_APP_ENV === 'dev' ? 'disabled' : ''}`}
+                className={`flex align-center just-between wallet-connect-btn ${
+                  process.env.REACT_APP_ENV === 'dev' ? 'disabled' : ''
+                }`}
                 // onClick={() => {
                 //   if (process.env.REACT_APP_ENV === 'prod') {
                 //     onConnectWallet();
@@ -237,7 +235,7 @@ function ConnectModal({
           )}
         </div>
         <p className="center terms-of-use">
-          <span>By connecting, I accept Venus's</span>
+          <span>By connecting, I accept Venus&lsquo;s</span>
           <a href="https://www.swipe.io/terms" target="_blank" rel="noreferrer">
             Terms of Service
           </a>
@@ -255,8 +253,6 @@ ConnectModal.propTypes = {
   wcUri: PropTypes.string,
   onCancel: PropTypes.func,
   onConnectMetaMask: PropTypes.func.isRequired,
-  onConnectBinance: PropTypes.func.isRequired,
-  onConnectWallet: PropTypes.func.isRequired,
   onBack: PropTypes.func.isRequired
 };
 

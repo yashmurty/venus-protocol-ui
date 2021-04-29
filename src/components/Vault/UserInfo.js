@@ -76,7 +76,9 @@ function UserInfo({ settings, availableVai, vaiStaked, vaiReward }) {
   const updateBalance = useCallback(async () => {
     if (settings.selectedAddress) {
       const xvsTokenContract = getTokenContract('xvs');
-      let temp = await methods.call(xvsTokenContract.methods.balanceOf, [settings.selectedAddress]);
+      let temp = await methods.call(xvsTokenContract.methods.balanceOf, [
+        settings.selectedAddress
+      ]);
       temp = new BigNumber(temp)
         .dividedBy(new BigNumber(10).pow(18))
         .dp(4, 1)
@@ -91,10 +93,10 @@ function UserInfo({ settings, availableVai, vaiStaked, vaiReward }) {
     setIsLoading(true);
     await methods
       .send(appContract.methods.claim, [], settings.selectedAddress)
-      .then(res => {
+      .then(() => {
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsLoading(false);
       });
   };
@@ -133,7 +135,9 @@ function UserInfo({ settings, availableVai, vaiStaked, vaiReward }) {
               {format(vaiReward)} XVS
             </p>
             <p
-              className={`pointer claim-btn ${(isLoading || vaiReward === '0') ? 'disable-btn' : '' }`}
+              className={`pointer claim-btn ${
+                isLoading || vaiReward === '0' ? 'disable-btn' : ''
+              }`}
               onClick={handleClaimReward}
             >
               {isLoading && <Icon type="loading" />} Claim

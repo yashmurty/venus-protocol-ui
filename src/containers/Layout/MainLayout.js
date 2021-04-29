@@ -66,9 +66,7 @@ function MainLayout({ title, isHeader, children }) {
               </Column>
             )}
             <Column xs="12">
-              <div className="main-content">
-                {children}
-              </div>
+              <div className="main-content">{children}</div>
             </Column>
             <Column xs="12">
               <Footer />

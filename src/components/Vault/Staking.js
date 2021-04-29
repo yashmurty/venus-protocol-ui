@@ -127,12 +127,12 @@ function Staking({
         ],
         settings.selectedAddress
       )
-      .then(res => {
+      .then(() => {
         updateTotalInfo();
         setStakeAmount(new BigNumber(0));
         setIsStakeLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsStakeLoading(false);
       });
   };
@@ -154,12 +154,12 @@ function Staking({
         ],
         settings.selectedAddress
       )
-      .then(res => {
+      .then(() => {
         updateTotalInfo();
         setWithdrawAmount(new BigNumber(0));
         setIsWithdrawLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsWithdrawLoading(false);
       });
   };
@@ -179,11 +179,11 @@ function Staking({
         ],
         settings.selectedAddress
       )
-      .then(res => {
+      .then(() => {
         updateTotalInfo();
         setIsStakeLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setIsStakeLoading(false);
       });
   };
@@ -192,7 +192,10 @@ function Staking({
     <Card>
       <StakingWrapper>
         <div className="stake-section">
-          <div className="stake-info">Available VAI to stake: {format(availableVai.dp(4, 1).toString(10))} VAI</div>
+          <div className="stake-info">
+            Available VAI to stake: {format(availableVai.dp(4, 1).toString(10))}{' '}
+            VAI
+          </div>
           {!isEnabled ? (
             <p className="stake-warning">
               To stake VAI, you need to approve it first.
@@ -241,7 +244,9 @@ function Staking({
           )}
         </div>
         <div className="stake-section">
-          <div className="stake-info">VAI staked: {format(vaiStaked.dp(4, 1).toString(10))} VAI</div>
+          <div className="stake-info">
+            VAI staked: {format(vaiStaked.dp(4, 1).toString(10))} VAI
+          </div>
           <div className="stake-input">
             <NumberFormat
               autoFocus
