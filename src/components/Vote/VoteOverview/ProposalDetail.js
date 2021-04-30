@@ -49,7 +49,10 @@ function ProposalDetail({ proposalInfo }) {
             Description
           </Label>
           <Label size="16">
-            <ReactMarkdown source={proposalInfo.description} />
+            <ReactMarkdown
+              source={proposalInfo.description}
+              className={{ color: '#09d395'}}
+            />
           </Label>
         </div>
       </ProposalDetailWrapper>
