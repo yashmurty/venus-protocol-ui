@@ -40,19 +40,18 @@ function ProposalDetail({ proposalInfo }) {
           <Label size="20" primary>
             Operation
           </Label>
-          {(proposalInfo.actions || []).map((s, idx) => (
-            <ReactMarkdown source={s.title} key={idx} />
-          ))}
+          <Label size="14">
+            {(proposalInfo.actions || []).map((s, idx) => (
+              <ReactMarkdown className="proposal-detail" source={s.title} key={idx} />
+            ))}
+          </Label>
         </div>
         <div className="section proposal-detail">
           <Label size="20" primary>
             Description
           </Label>
           <Label size="16">
-            <ReactMarkdown
-              source={proposalInfo.description}
-              className={{ color: '#09d395'}}
-            />
+            <ReactMarkdown source={proposalInfo.description} />
           </Label>
         </div>
       </ProposalDetailWrapper>
