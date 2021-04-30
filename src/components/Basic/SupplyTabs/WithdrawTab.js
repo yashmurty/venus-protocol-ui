@@ -67,7 +67,9 @@ function WithdrawTab({ asset, settings, changeTab, onCancel, setSetting }) {
     setSafeMaxBalance(BigNumber.minimum(safeMax, supplyBalance));
 
     if (tokenPrice && !amount.isZero() && !amount.isNaN()) {
-      const temp = totalBorrowLimit.minus(amount.times(tokenPrice).times(collateralFactor));
+      const temp = totalBorrowLimit.minus(
+        amount.times(tokenPrice).times(collateralFactor)
+      );
       setNewBorrowLimit(temp);
       setNewBorrowPercent(totalBorrowBalance.div(temp).times(100));
       if (totalBorrowLimit.isZero()) {
@@ -85,7 +87,9 @@ function WithdrawTab({ asset, settings, changeTab, onCancel, setSetting }) {
         setNewBorrowPercent(new BigNumber(0));
       } else {
         setBorrowPercent(totalBorrowBalance.div(totalBorrowLimit).times(100));
-        setNewBorrowPercent(totalBorrowBalance.div(totalBorrowLimit).times(100));
+        setNewBorrowPercent(
+          totalBorrowBalance.div(totalBorrowLimit).times(100)
+        );
       }
     }
   }, [settings.selectedAddress, amount]);
@@ -199,7 +203,8 @@ function WithdrawTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </span>
         </div>
         <p className="warning-label center">
-          Your available withdraw amount = Total Supply Amount - VAI Mint Amount - Borrowed Amount
+          Your available withdraw amount = Total Supply Amount - VAI Mint Amount
+          - Borrowed Amount
         </p>
       </div>
       <Tabs className="flex align-center">
@@ -231,7 +236,16 @@ function WithdrawTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </div>
           <div className="description">
             <div className="flex align-center">
-              <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={coinImg} alt="asset" />
+              <img
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginLeft: 2,
+                  marginRight: 16
+                }}
+                src={coinImg}
+                alt="asset"
+              />
               <span>Distribution APY</span>
             </div>
             <span>
@@ -243,7 +257,16 @@ function WithdrawTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </div>
           <div className="description">
             <div className="flex align-center">
-              <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={vaiImg} alt="asset" />
+              <img
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginLeft: 2,
+                  marginRight: 16
+                }}
+                src={vaiImg}
+                alt="asset"
+              />
               <span>Available VAI Limit</span>
             </div>
             <span>
@@ -256,10 +279,27 @@ function WithdrawTab({ asset, settings, changeTab, onCancel, setSetting }) {
           {asset.symbol !== 'BNB' && (
             <div className="description">
               <div className="flex align-center">
-                <img src={feeImg} style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} alt="fee" />
+                <img
+                  src={feeImg}
+                  style={{
+                    width: 25,
+                    height: 25,
+                    marginLeft: 2,
+                    marginRight: 16
+                  }}
+                  alt="fee"
+                />
                 <span>Fee</span>
               </div>
-              <span>{!amount.isNaN() ? new BigNumber(amount).times(feePercent / 100).dp(4).toString(10) : 0} {asset.symbol} ({feePercent.toString(10)}%)</span>
+              <span>
+                {!amount.isNaN()
+                  ? new BigNumber(amount)
+                      .times(feePercent / 100)
+                      .dp(4)
+                      .toString(10)
+                  : 0}{' '}
+                {asset.symbol} ({feePercent.toString(10)}%)
+              </span>
             </div>
           )}
         </div>

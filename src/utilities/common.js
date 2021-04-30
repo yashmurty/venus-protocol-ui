@@ -13,7 +13,9 @@ export const encodeParameters = (types, values) => {
 
 export const getArgs = func => {
   // First match everything inside the function argument parens.
-  const args = func.toString().match(/.*?\(([^)]*)\)/) ? func.toString().match(/.*?\(([^)]*)\)/)[1] : '';
+  const args = func.toString().match(/.*?\(([^)]*)\)/)
+    ? func.toString().match(/.*?\(([^)]*)\)/)[1]
+    : '';
   // Split the arguments string into an array comma delimited.
   return args
     .split(',')
@@ -33,7 +35,9 @@ export const checkIsValidNetwork = (walletType = 'metamask') => {
     if (walletType === 'binance' && window.BinanceChain) {
       netId = +window.BinanceChain.chainId;
     } else if (window.ethereum) {
-      netId = window.ethereum.networkVersion ? +window.ethereum.networkVersion : +window.ethereum.chainId
+      netId = window.ethereum.networkVersion
+        ? +window.ethereum.networkVersion
+        : +window.ethereum.chainId;
     }
     if (netId) {
       if (netId === 97 || netId === 56) {
@@ -66,9 +70,14 @@ export const addToken = async (asset = 'vai', decimal, type) => {
       type === 'token'
         ? constants.CONTRACT_TOKEN_ADDRESS[asset].address
         : constants.CONTRACT_VBEP_ADDRESS[asset].address;
-    tokenSymbol = type === 'token' ? asset.toUpperCase() : `v${(asset === 'btcb' ? 'btc' : asset).toUpperCase()}`;
+    tokenSymbol =
+      type === 'token'
+        ? asset.toUpperCase()
+        : `v${(asset === 'btcb' ? 'btc' : asset).toUpperCase()}`;
     tokenDecimals = decimal || (type === 'token' ? 18 : 8);
-    tokenImage = `${window.location.origin}/coins/${type === 'token' ? asset : `v${asset === 'btcb' ? 'btc' : asset}`}.png`;
+    tokenImage = `${window.location.origin}/coins/${
+      type === 'token' ? asset : `v${asset === 'btcb' ? 'btc' : asset}`
+    }.png`;
   }
 
   try {
@@ -87,11 +96,14 @@ export const addToken = async (asset = 'vai', decimal, type) => {
     });
 
     if (wasAdded) {
+      // eslint-disable-next-line no-console
       console.log('Thanks for your interest!');
     } else {
+      // eslint-disable-next-line no-console
       console.log('Your loss!');
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(error);
   }
 };
@@ -107,18 +119,34 @@ export const getBigNumber = value => {
 };
 
 export const currencyFormatter = labelValue => {
-  // Nine Zeroes for Billions
-  return Math.abs(Number(labelValue)) >= 1.0e+9
-
-  ? `$${format(new BigNumber(`${Math.abs(Number(labelValue)) / 1.0e+9}`).dp(2, 1))}B`
-  // Six Zeroes for Millions 
-  : Math.abs(Number(labelValue)) >= 1.0e+6
-
-  ? `$${format(new BigNumber(`${Math.abs(Number(labelValue)) / 1.0e+6}`).dp(2, 1))}M`
-  // Three Zeroes for Thousands
-  : Math.abs(Number(labelValue)) >= 1.0e+3
-
-  ? `$${format(new BigNumber(`${Math.abs(Number(labelValue)) / 1.0e+3}`).dp(2, 1))}K`
-
-  : `$${format(new BigNumber(`${Math.abs(Number(labelValue))}`).dp(2, 1))}`;
+  let suffix = '';
+  let unit = 1;
+  const abs = Math.abs(Number(labelValue));
+  if (abs >= 1.0e9) {
+    // Nine Zeroes for Billions
+    suffix = 'B';
+    unit = 1.0e9;
+  } else if (abs >= 1.0e6) {
+    // Six Zeroes for Millions
+    suffix = 'M';
+    unit = 1.0e6;
+  } else if (abs >= 1.0e3) {
+    // Three Zeroes for Thousands
+    suffix = 'K';
+    unit = 1.0e3;
+  }
+  return `$${format(new BigNumber(`${abs / unit}`).dp(2, 1))}${suffix}`;
+  // return Math.abs(Number(labelValue)) >= 1.0e9
+  //   ? `$${format(
+  //       new BigNumber(`${Math.abs(Number(labelValue)) / 1.0e9}`).dp(2, 1)
+  //     )}B`
+  //   : Math.abs(Number(labelValue)) >= 1.0e6
+  //   ? `$${format(
+  //       new BigNumber(`${Math.abs(Number(labelValue)) / 1.0e6}`).dp(2, 1)
+  //     )}M`
+  //   : Math.abs(Number(labelValue)) >= 1.0e3
+  //   ? `$${format(
+  //       new BigNumber(`${Math.abs(Number(labelValue)) / 1.0e3}`).dp(2, 1)
+  //     )}K`
+  //   : `$${format(new BigNumber(`${Math.abs(Number(labelValue))}`).dp(2, 1))}`;
 };

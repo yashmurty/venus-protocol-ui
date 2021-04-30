@@ -169,7 +169,7 @@ function ProposalModal({
       callData: []
     }
   ]);
-  const [activePanelKey, setActivePanelKey] = useState(["0"]);
+  const [activePanelKey, setActivePanelKey] = useState(['0']);
 
   useEffect(() => {
     if (!visible) {
@@ -211,9 +211,13 @@ function ProposalModal({
             callDataTypes = getArgs(formValues[`signature${i}`]);
             for (let j = 0; j < formData[i].callData.length; j += 1) {
               if (callDataTypes[j].toLowerCase() === 'bool') {
-                callDataValues.push(formValues[`calldata_${i}_${j}`].toLowerCase() === 'true' ? true : false);
+                callDataValues.push(
+                  formValues[`calldata_${i}_${j}`].toLowerCase() === 'true'
+                );
               } else if (callDataTypes[j].includes('[]')) {
-                callDataValues.push(formValues[`calldata_${i}_${j}`].split(','));
+                callDataValues.push(
+                  formValues[`calldata_${i}_${j}`].split(',')
+                );
               } else {
                 callDataValues.push(formValues[`calldata_${i}_${j}`]);
               }
@@ -232,12 +236,12 @@ function ProposalModal({
             [targetAddresses, values, signatures, callDatas, description],
             address
           )
-          .then(res => {
+          .then(() => {
             setErrorMsg('');
             setIsLoading(false);
             onCancel();
           })
-          .catch(err => {
+          .catch(() => {
             setErrorMsg('Creating proposal is failed!');
             setIsLoading(false);
           });
@@ -245,7 +249,7 @@ function ProposalModal({
     });
   };
 
-  const handleEditorChange = ({ html, text }) => {
+  const handleEditorChange = ({ text }) => {
     setDescription(text);
   };
 
@@ -278,7 +282,11 @@ function ProposalModal({
   };
 
   const handleParseFunc = (funcStr, idx) => {
-    if ((form.getFieldValue(`signature${idx}`) || '').trim().replace(/^s+|s+$/g, '')) {
+    if (
+      (form.getFieldValue(`signature${idx}`) || '')
+        .trim()
+        .replace(/^s+|s+$/g, '')
+    ) {
       const parsedStr = getArgs(funcStr);
       formData[idx].signature = funcStr;
       formData[idx].callData = [...parsedStr];
@@ -358,7 +366,19 @@ function ProposalModal({
                           }
                         ],
                         initialValue: f.targetAddress
-                      })(<Input placeholder="Address" onKeyUp={() => handleKeyUp('targetAddress', index, null, form.getFieldValue(`targetAddress${index}`))} />)}
+                      })(
+                        <Input
+                          placeholder="Address"
+                          onKeyUp={() =>
+                            handleKeyUp(
+                              'targetAddress',
+                              index,
+                              null,
+                              form.getFieldValue(`targetAddress${index}`)
+                            )
+                          }
+                        />
+                      )}
                     </Form.Item>
                     {/* <Form.Item>
                       {getFieldDecorator(`value${index}`, {
@@ -382,30 +402,61 @@ function ProposalModal({
                           }
                         ],
                         initialValue: f.signature
-                      })(<Input placeholder="assumeOwnership(address,string,uint256)" onKeyUp={() => handleParseFunc(form.getFieldValue(`signature${index}`), index)} />)}
+                      })(
+                        <Input
+                          placeholder="assumeOwnership(address,string,uint256)"
+                          onKeyUp={() =>
+                            handleParseFunc(
+                              form.getFieldValue(`signature${index}`),
+                              index
+                            )
+                          }
+                        />
+                      )}
                     </Form.Item>
                     {f.callData.map((c, cIdx) => (
                       <Form.Item key={cIdx}>
                         {getFieldDecorator(`calldata_${index}_${cIdx}`, {
                           rules: [
-                            { required: true, message: 'Calldata is required!' },
+                            {
+                              required: true,
+                              message: 'Calldata is required!'
+                            },
                             {
                               whitespace: true,
                               message: 'This field can not empty'
                             }
                           ],
                           initialValue: c
-                        })(<Input placeholder={`${c}(calldata)`} onKeyUp={() => handleKeyUp('calldata', index, cIdx, form.getFieldValue(`calldata_${index}_${cIdx}`))} />)}
+                        })(
+                          <Input
+                            placeholder={`${c}(calldata)`}
+                            onKeyUp={() =>
+                              handleKeyUp(
+                                'calldata',
+                                index,
+                                cIdx,
+                                form.getFieldValue(`calldata_${index}_${cIdx}`)
+                              )
+                            }
+                          />
+                        )}
                       </Form.Item>
                     ))}
                     {formData.length < +maxOperation && (
                       <div className="flex align-center just-end add-btn-wrapper">
                         {index !== 0 && (
-                          <Button className="add-btn" onClick={() => handleAdd('previous', index)}>
+                          <Button
+                            className="add-btn"
+                            onClick={() => handleAdd('previous', index)}
+                          >
                             Add to previous
                           </Button>
                         )}
-                        <Button className="add-btn" onClick={() => handleAdd('next', index)}>
+                        <Button
+                          className="add-btn"
+                          onClick={() => handleAdd('next', index)}
+                        >
                           Add to next
                         </Button>
                       </div>
@@ -428,7 +479,11 @@ function ProposalModal({
             <Button
               type="submit"
               className="proposal-btn"
-              disabled={isLoading || formData.length > maxOperation || description.trim().length === 0}
+              disabled={
+                isLoading ||
+                formData.length > maxOperation ||
+                description.trim().length === 0
+              }
             >
               {isLoading && <Icon type="loading" />} Create
             </Button>

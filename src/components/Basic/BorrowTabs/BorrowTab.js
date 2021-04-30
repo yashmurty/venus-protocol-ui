@@ -37,7 +37,9 @@ function BorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
         setNewBorrowPercent(new BigNumber(0));
       } else {
         setBorrowPercent(totalBorrowBalance.div(totalBorrowLimit).times(100));
-        setNewBorrowPercent(totalBorrowBalance.div(totalBorrowLimit).times(100));
+        setNewBorrowPercent(
+          totalBorrowBalance.div(totalBorrowLimit).times(100)
+        );
       }
     } else {
       const temp = totalBorrowBalance.plus(amount.times(tokenPrice));
@@ -91,7 +93,7 @@ function BorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
           ],
           settings.selectedAddress
         )
-        .then(res => {
+        .then(() => {
           setAmount(new BigNumber(0));
           setIsLoading(false);
           setSetting({
@@ -192,7 +194,16 @@ function BorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </div>
           <div className="description">
             <div className="flex align-center">
-              <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={coinImg} alt="asset" />
+              <img
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginLeft: 2,
+                  marginRight: 16
+                }}
+                src={coinImg}
+                alt="asset"
+              />
               <span>Distribution APY</span>
             </div>
             <span>
@@ -204,7 +215,16 @@ function BorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
           </div>
           <div className="description">
             <div className="flex align-center">
-              <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={vaiImg} alt="asset" />
+              <img
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginLeft: 2,
+                  marginRight: 16
+                }}
+                src={vaiImg}
+                alt="asset"
+              />
               <span>Repay VAI Balance</span>
             </div>
             <span>
@@ -217,10 +237,23 @@ function BorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
           {!new BigNumber(asset.borrowCaps || 0).isZero() && (
             <div className="description borrow-caps">
               <div className="flex align-center">
-                <img style={{ width: 25, height: 25, marginLeft: 2, marginRight: 16 }} src={coinImg} alt="asset" />
+                <img
+                  style={{
+                    width: 25,
+                    height: 25,
+                    marginLeft: 2,
+                    marginRight: 16
+                  }}
+                  src={coinImg}
+                  alt="asset"
+                />
                 <span>Borrow Caps</span>
               </div>
-              <span>{format(new BigNumber(asset.borrowCaps || 0).dp(2, 1).toString(10))}</span>
+              <span>
+                {format(
+                  new BigNumber(asset.borrowCaps || 0).dp(2, 1).toString(10)
+                )}
+              </span>
             </div>
           )}
         </div>

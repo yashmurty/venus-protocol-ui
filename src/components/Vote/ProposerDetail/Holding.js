@@ -55,7 +55,7 @@ const HoldingWrapper = styled.div`
 `;
 const format = commaNumber.bindWith(',', '.');
 
-function Holding({ address, holdingInfo, history }) {
+function Holding({ address, holdingInfo }) {
   return (
     <Card>
       <HoldingWrapper className="flex flex-column">
@@ -96,13 +96,11 @@ function Holding({ address, holdingInfo, history }) {
 }
 
 Holding.propTypes = {
-  history: PropTypes.object,
   address: PropTypes.string,
   holdingInfo: PropTypes.object
 };
 
 Holding.defaultProps = {
-  history: {},
   address: '',
   holdingInfo: {}
 };

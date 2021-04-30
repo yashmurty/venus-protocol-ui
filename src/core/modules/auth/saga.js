@@ -18,6 +18,7 @@ export function* handleAuthErrorRequest({ payload, resolve, reject }) {
       yield put(authActionCreators.logOut({}));
     }
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log('e', e);
   }
 }

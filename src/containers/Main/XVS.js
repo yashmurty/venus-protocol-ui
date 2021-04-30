@@ -210,28 +210,62 @@ function XVS({ settings }) {
   const getXVSInfo = async () => {
     const tempMarkets = [];
     const sum = (settings.markets || []).reduce((accumulator, market) => {
-      return new BigNumber(accumulator).plus(new BigNumber(market.totalDistributed));
+      return new BigNumber(accumulator).plus(
+        new BigNumber(market.totalDistributed)
+      );
     }, 0);
     const compContract = getComptrollerContract();
 
     // total info
-    let venusVAIVaultRate = await methods.call(compContract.methods.venusVAIVaultRate, []);
-    venusVAIVaultRate = new BigNumber(venusVAIVaultRate).div(1e18).times(20 * 60 * 24);
+    let venusVAIVaultRate = await methods.call(
+      compContract.methods.venusVAIVaultRate,
+      []
+    );
+    venusVAIVaultRate = new BigNumber(venusVAIVaultRate)
+      .div(1e18)
+      .times(20 * 60 * 24);
     const tokenContract = getTokenContract('xvs');
     const remainedAmount = await methods.call(tokenContract.methods.balanceOf, [
       process.env.REACT_APP_ENV === 'dev'
         ? process.env.REACT_APP_TEST_COMPTROLLER_ADDRESS
         : process.env.REACT_APP_MAIN_COMPTROLLER_ADDRESS
     ]);
-    setDailyDistribution(new BigNumber(settings.dailyVenus).div(new BigNumber(10).pow(18)).plus(venusVAIVaultRate).dp(2, 1).toString(10));
+    setDailyDistribution(
+      new BigNumber(settings.dailyVenus)
+        .div(new BigNumber(10).pow(18))
+        .plus(venusVAIVaultRate)
+        .dp(2, 1)
+        .toString(10)
+    );
     setTotalDistributed(sum.toString(10));
-    setRemainAmount(new BigNumber(remainedAmount).div(new BigNumber(10).pow(18)).dp(2, 1).toString(10));
+    setRemainAmount(
+      new BigNumber(remainedAmount)
+        .div(new BigNumber(10).pow(18))
+        .dp(2, 1)
+        .toString(10)
+    );
     for (let i = 0; i < settings.markets.length; i += 1) {
       tempMarkets.push({
         underlyingSymbol: settings.markets[i].underlyingSymbol,
-        perDay: +(new BigNumber(settings.markets[i].supplierDailyVenus).plus(new BigNumber(settings.markets[i].borrowerDailyVenus)).div(new BigNumber(10).pow(18)).dp(2, 1).toString(10)),
-        supplyAPY: +(new BigNumber(settings.markets[i].supplyVenusApy).isLessThan(0.01) ? '0.01' : new BigNumber(settings.markets[i].supplyVenusApy).dp(2, 1).toString(10)),
-        borrowAPY: +(new BigNumber(settings.markets[i].borrowVenusApy).isLessThan(0.01) ? '0.01' : new BigNumber(settings.markets[i].borrowVenusApy).dp(2, 1).toString(10))
+        perDay: +new BigNumber(settings.markets[i].supplierDailyVenus)
+          .plus(new BigNumber(settings.markets[i].borrowerDailyVenus))
+          .div(new BigNumber(10).pow(18))
+          .dp(2, 1)
+          .toString(10),
+        supplyAPY: +(new BigNumber(
+          settings.markets[i].supplyVenusApy
+        ).isLessThan(0.01)
+          ? '0.01'
+          : new BigNumber(settings.markets[i].supplyVenusApy)
+              .dp(2, 1)
+              .toString(10)),
+        borrowAPY: +(new BigNumber(
+          settings.markets[i].borrowVenusApy
+        ).isLessThan(0.01)
+          ? '0.01'
+          : new BigNumber(settings.markets[i].borrowVenusApy)
+              .dp(2, 1)
+              .toString(10))
       });
     }
     tempMarkets.push({
@@ -250,7 +284,11 @@ function XVS({ settings }) {
   }, [settings.markets]);
 
   const handleSort = field => {
-    setSortInfo({ field, sort: sortInfo.field === field && sortInfo.sort === 'desc' ? 'asc' : 'desc' });
+    setSortInfo({
+      field,
+      sort:
+        sortInfo.field === field && sortInfo.sort === 'desc' ? 'asc' : 'desc'
+    });
   };
 
   return (
@@ -308,7 +346,9 @@ function XVS({ settings }) {
                     </div>
                   </div>
                   <Progress
-                    percent={new BigNumber(totalDistributed).dividedBy(new BigNumber(mintedAmount)).multipliedBy(100)}
+                    percent={new BigNumber(totalDistributed)
+                      .dividedBy(new BigNumber(mintedAmount))
+                      .multipliedBy(100)}
                     strokeColor="#f8b94b"
                     strokeWidth={7}
                     showInfo={false}
@@ -321,19 +361,56 @@ function XVS({ settings }) {
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} className="market">
                     Market
                   </Col>
-                  <Col xs={{ span: 8 }} lg={{ span: 6 }} className="per-day right">
+                  <Col
+                    xs={{ span: 8 }}
+                    lg={{ span: 6 }}
+                    className="per-day right"
+                  >
                     <span onClick={() => handleSort('perDay')}>
-                      <img src={coinImg} alt="xvs" /> Per Day {sortInfo.field === 'perDay' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                      <img src={coinImg} alt="xvs" /> Per Day{' '}
+                      {sortInfo.field === 'perDay' && (
+                        <Icon
+                          type={
+                            sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'
+                          }
+                        />
+                      )}
                     </span>
                   </Col>
-                  <Col xs={{ span: 8 }} lg={{ span: 6 }} className="supply-apy right">
+                  <Col
+                    xs={{ span: 8 }}
+                    lg={{ span: 6 }}
+                    className="supply-apy right"
+                  >
                     <span onClick={() => handleSort('supplyAPY')}>
-                      Supply<img src={coinImg} alt="xvs" />APY {sortInfo.field === 'supplyAPY' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                      Supply
+                      <img src={coinImg} alt="xvs" />
+                      APY{' '}
+                      {sortInfo.field === 'supplyAPY' && (
+                        <Icon
+                          type={
+                            sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'
+                          }
+                        />
+                      )}
                     </span>
                   </Col>
-                  <Col xs={{ span: 8 }} lg={{ span: 6 }} className="borrow-apy right">
+                  <Col
+                    xs={{ span: 8 }}
+                    lg={{ span: 6 }}
+                    className="borrow-apy right"
+                  >
                     <span onClick={() => handleSort('borrowAPY')}>
-                      Borrow<img src={coinImg} alt="xvs" />APY {sortInfo.field === 'borrowAPY' && <Icon type={sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'} />}
+                      Borrow
+                      <img src={coinImg} alt="xvs" />
+                      APY{' '}
+                      {sortInfo.field === 'borrowAPY' && (
+                        <Icon
+                          type={
+                            sortInfo.sort === 'desc' ? 'caret-down' : 'caret-up'
+                          }
+                        />
+                      )}
                     </span>
                   </Col>
                   {/* <Col xs={{ span: 6 }} lg={{ span: 4 }} className="total-distributed right">
@@ -344,48 +421,86 @@ function XVS({ settings }) {
                   {markets &&
                     (markets || [])
                       .sort((a, b) => {
-                        if (!sortInfo.field) {
-                          return +new BigNumber(b.perDay).minus(new BigNumber(a.perDay)).toString(10)
+                        if (sortInfo.field) {
+                          if (sortInfo.field === 'perDay') {
+                            return sortInfo.sort === 'desc'
+                              ? +new BigNumber(b.perDay)
+                                  .minus(new BigNumber(a.perDay))
+                                  .toString(10)
+                              : +new BigNumber(a.perDay)
+                                  .minus(new BigNumber(b.perDay))
+                                  .toString(10);
+                          }
+                          if (sortInfo.field === 'supplyAPY') {
+                            return sortInfo.sort === 'desc'
+                              ? +new BigNumber(b.supplyAPY)
+                                  .minus(new BigNumber(a.supplyAPY))
+                                  .toString(10)
+                              : +new BigNumber(a.supplyAPY)
+                                  .minus(new BigNumber(b.supplyAPY))
+                                  .toString(10);
+                          }
+                          if (sortInfo.field === 'borrowAPY') {
+                            return sortInfo.sort === 'desc'
+                              ? +new BigNumber(b.borrowAPY)
+                                  .minus(new BigNumber(a.borrowAPY))
+                                  .toString(10)
+                              : +new BigNumber(a.borrowAPY)
+                                  .minus(new BigNumber(b.borrowAPY))
+                                  .toString(10);
+                          }
                         }
-                        if (sortInfo.field === 'perDay') {
-                          return sortInfo.sort === 'desc' ? 
-                            +new BigNumber(b.perDay).minus(new BigNumber(a.perDay)).toString(10) :
-                            +new BigNumber(a.perDay).minus(new BigNumber(b.perDay)).toString(10)
-                        }
-                        if (sortInfo.field === 'supplyAPY') {
-                          return sortInfo.sort === 'desc' ? 
-                            +new BigNumber(b.supplyAPY).minus(new BigNumber(a.supplyAPY)).toString(10) :
-                            +new BigNumber(a.supplyAPY).minus(new BigNumber(b.supplyAPY)).toString(10)
-                        }
-                        if (sortInfo.field === 'borrowAPY') {
-                          return sortInfo.sort === 'desc' ? 
-                            +new BigNumber(b.borrowAPY).minus(new BigNumber(a.borrowAPY)).toString(10) :
-                            +new BigNumber(a.borrowAPY).minus(new BigNumber(b.borrowAPY)).toString(10)
-                        }
+                        return +new BigNumber(b.perDay)
+                          .minus(new BigNumber(a.perDay))
+                          .toString(10);
                       })
                       .map((item, index) => (
                         <Row className="table_item pointer" key={index}>
-                          <Col xs={{ span: 24 }} lg={{ span: 6 }} className="flex align-center market">
+                          <Col
+                            xs={{ span: 24 }}
+                            lg={{ span: 6 }}
+                            className="flex align-center market"
+                          >
                             {item.underlyingSymbol !== 'VAI' ? (
                               <img
                                 className="asset-img"
-                                src={constants.CONTRACT_TOKEN_ADDRESS[item.underlyingSymbol.toLowerCase()].asset}
+                                src={
+                                  constants.CONTRACT_TOKEN_ADDRESS[
+                                    item.underlyingSymbol.toLowerCase()
+                                  ].asset
+                                }
                                 alt="asset"
                               />
                             ) : (
-                              <img className="vai-img" src={vaiImg} alt="asset" />
+                              <img
+                                className="vai-img"
+                                src={vaiImg}
+                                alt="asset"
+                              />
                             )}
                             <p>{item.underlyingSymbol}</p>
                           </Col>
-                          <Col xs={{ span: 24 }} lg={{ span: 6 }} className="per-day right">
+                          <Col
+                            xs={{ span: 24 }}
+                            lg={{ span: 6 }}
+                            className="per-day right"
+                          >
                             <p className="mobile-label">Per day</p>
                             <p>{item.perDay}</p>
                           </Col>
-                          <Col xs={{ span: 24 }} lg={{ span: 6 }} className="supply-apy right">
+                          <Col
+                            xs={{ span: 24 }}
+                            lg={{ span: 6 }}
+                            className="supply-apy right"
+                          >
                             <p className="mobile-label">Supply APY</p>
                             <p>{item.supplyAPY}%</p>
                           </Col>
-                          <Col xs={{ span: 24 }} lg={{ span: 6 }} className="borrow-apy right">
+                          <Col
+                            xs={{ span: 24 }}
+                            lg={{ span: 6 }}
+                            className="borrow-apy right"
+                          >
                             <p className="mobile-label">Borrow APY</p>
                             {item.underlyingSymbol !== 'VAI' ? (
                               <p>{item.borrowAPY}%</p>

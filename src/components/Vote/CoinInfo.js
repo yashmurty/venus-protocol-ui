@@ -66,7 +66,10 @@ function CoinInfo({ address, balance }) {
           onClick={() => handleLink()}
         >
           <p className="highlight">
-            {`${address.substr(0, 4)}...${address.substr(address.length - 4, 4)}`}
+            {`${address.substr(0, 4)}...${address.substr(
+              address.length - 4,
+              4
+            )}`}
           </p>
           <div className="flex align-center just-center copy-btn">
             <Icon type="arrow-right" />

@@ -91,7 +91,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-function Faucet({ form, getFromFaucet, history }) {
+function Faucet({ form, getFromFaucet }) {
   const { getFieldDecorator } = form;
   const [isLoading, setIsLoading] = useState(false);
 
@@ -104,7 +104,7 @@ function Faucet({ form, getFromFaucet, history }) {
           asset: symbol,
           amountType: e.key
         })
-          .then(res => {
+          .then(() => {
             setIsLoading(false);
             let fromAddress;
             if (symbol === 'xvs') {
@@ -446,7 +446,6 @@ function Faucet({ form, getFromFaucet, history }) {
 
 Faucet.propTypes = {
   form: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
   getFromFaucet: PropTypes.func.isRequired
 };
 

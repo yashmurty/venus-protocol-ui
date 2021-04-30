@@ -17,7 +17,7 @@ export const sendSupply = async (from, amount, callback) => {
       data: contractData
     };
     // // Send transaction
-    await web3.eth.sendTransaction(tx, (err, transactionHash) => {
+    await web3.eth.sendTransaction(tx, err => {
       if (!err) {
         callback(true);
       }
@@ -45,7 +45,7 @@ export const sendRepay = async (from, amount, callback) => {
       data: contractData
     };
     // Send transaction
-    await web3.eth.sendTransaction(tx, (err, transactionHash) => {
+    await web3.eth.sendTransaction(tx, err => {
       if (!err) {
         callback(true);
       }
