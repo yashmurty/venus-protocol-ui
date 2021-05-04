@@ -58,6 +58,13 @@ const CardWrapper = styled.div`
     color: var(--color-text-green);
   }
 
+  .apy-value-red {
+    text-align: right;
+    font-size: 19px;
+    font-weight: 900;
+    color: var(--color-text-red);
+  }
+
   .description {
     width: 100%;
     display: flex;
@@ -299,7 +306,7 @@ function Overview({ settings, getMarketHistory }) {
         </div>
         <div className="historic-label">Historical rates</div>
         <div className="flex flex-column flex-end">
-          <p className="apy-value">{currentAPY}%</p>
+          <p className={(settings.marketType || 'supply') === 'supply' ? "apy-value" : "apy-value-red"}>{currentAPY}%</p>
           <p className="apy-label">
             {(settings.marketType || 'supply') === 'supply'
               ? 'Supply APY'
