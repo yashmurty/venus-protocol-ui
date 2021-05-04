@@ -285,6 +285,7 @@ const format = commaNumber.bindWith(',', '.');
 
 function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isMarketInfoUpdating, setMarketInfoUpdating] = useState(false);
   const [error, setError] = useState('');
   const [web3, setWeb3] = useState(null);
   const [awaiting, setAwaiting] = useState(false);
@@ -544,203 +545,202 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
   const updateMarketInfo = async () => {
     const accountAddress = settings.selectedAddress;
-    if (!accountAddress || !settings.decimals || !settings.markets) {
+    if (!accountAddress || !settings.decimals || !settings.markets || isMarketInfoUpdating) {
       return;
     }
     const appContract = getComptrollerContract();
     const vaiContract = getVaiTokenContract();
 
-    // Total Vai Staked
-    let vaiVaultStaked = await methods.call(vaiContract.methods.balanceOf, [
-      constants.CONTRACT_VAI_VAULT_ADDRESS
-    ]);
-    vaiVaultStaked = new BigNumber(vaiVaultStaked)
-      .div(1e18)
-      .dp(4, 1)
-      .toString(10);
+    setMarketInfoUpdating(true);
 
-    // minted vai amount
-    let vaiMinted = await methods.call(appContract.methods.mintedVAIs, [
-      accountAddress
-    ]);
-    vaiMinted = new BigNumber(vaiMinted).div(new BigNumber(10).pow(18));
-
-    // VAI APY
-    let vaiAPY;
-    if (settings.dailyVenus && vaiVaultStaked) {
-      let venusVAIVaultRate = await methods.call(
-        appContract.methods.venusVAIVaultRate,
-        []
-      );
-      venusVAIVaultRate = new BigNumber(venusVAIVaultRate)
+    try {
+      // Total Vai Staked
+      let vaiVaultStaked = await methods.call(vaiContract.methods.balanceOf, [
+        constants.CONTRACT_VAI_VAULT_ADDRESS
+      ]);
+      vaiVaultStaked = new BigNumber(vaiVaultStaked)
         .div(1e18)
-        .times(20 * 60 * 24);
-      const xvsMarket = settings.markets.find(
-        ele => ele.underlyingSymbol === 'XVS'
-      );
-      vaiAPY = new BigNumber(venusVAIVaultRate)
-        .times(xvsMarket.tokenPrice)
-        .times(365 * 100)
-        .div(vaiVaultStaked)
-        .dp(2, 1)
+        .dp(4, 1)
         .toString(10);
-      setSetting({
-        vaiAPY
-      });
-    }
 
-    const assetsIn = await methods.call(appContract.methods.getAssetsIn, [
-      accountAddress
-    ]);
-
-    let totalSupplyBalance = new BigNumber(0);
-    let totalBorrowBalance = new BigNumber(0);
-    let totalBorrowLimit = new BigNumber(0);
-    let totalLiquidity = new BigNumber(0);
-    const assetList = [];
-
-    for (
-      let index = 0;
-      index < Object.values(constants.CONTRACT_TOKEN_ADDRESS).length;
-      index += 1
-    ) {
-      const item = Object.values(constants.CONTRACT_TOKEN_ADDRESS)[index];
-      if (!settings.decimals[item.id]) {
-        return;
-      }
-
-      let market = settings.markets.find(
-        ele => ele.underlyingSymbol === item.symbol
-      );
-      if (!market) market = {};
-      const asset = {
-        key: index,
-        id: item.id,
-        img: item.asset,
-        vimg: item.vasset,
-        name: market.underlyingSymbol || '',
-        symbol: market.underlyingSymbol || '',
-        tokenAddress: item.address,
-        vsymbol: market.symbol,
-        vtokenAddress: constants.CONTRACT_VBEP_ADDRESS[item.id].address,
-        supplyApy: new BigNumber(market.supplyApy || 0),
-        borrowApy: new BigNumber(market.borrowApy || 0),
-        xvsSupplyApy: new BigNumber(market.supplyVenusApy || 0),
-        xvsBorrowApy: new BigNumber(market.borrowVenusApy || 0),
-        collateralFactor: new BigNumber(market.collateralFactor || 0).div(1e18),
-        tokenPrice: new BigNumber(market.tokenPrice || 0),
-        liquidity: new BigNumber(market.liquidity || 0),
-        borrowCaps: new BigNumber(market.borrowCaps || 0),
-        totalBorrows: new BigNumber(market.totalBorrows2 || 0),
-        walletBalance: new BigNumber(0),
-        supplyBalance: new BigNumber(0),
-        borrowBalance: new BigNumber(0),
-        isEnabled: false,
-        collateral: false,
-        percentOfLimit: '0'
-      };
-
-      const tokenDecimal = settings.decimals[item.id].token;
-      const vBepContract = getVbepContract(item.id);
-      asset.collateral = assetsIn.includes(asset.vtokenAddress);
-      // wallet balance
-      if (item.id !== 'bnb') {
-        const tokenContract = getTokenContract(item.id);
-        const walletBalance = await methods.call(
-          tokenContract.methods.balanceOf,
-          [accountAddress]
-        );
-        asset.walletBalance = new BigNumber(walletBalance).div(
-          new BigNumber(10).pow(tokenDecimal)
-        );
-
-        // allowance
-        let allowBalance = await methods.call(tokenContract.methods.allowance, [
-          accountAddress,
-          asset.vtokenAddress
-        ]);
-        allowBalance = new BigNumber(allowBalance).div(
-          new BigNumber(10).pow(tokenDecimal)
-        );
-        asset.isEnabled = allowBalance.isGreaterThan(asset.walletBalance);
-      } else if (window.ethereum) {
-        await window.web3.eth.getBalance(accountAddress, (err, res) => {
-          if (!err) {
-            asset.walletBalance = new BigNumber(res).div(
-              new BigNumber(10).pow(tokenDecimal)
-            );
-          }
-        });
-        asset.isEnabled = true;
-      }
-      // supply balance
-      const supplyBalance = await methods.call(
-        vBepContract.methods.balanceOfUnderlying,
-        [accountAddress]
-      );
-      asset.supplyBalance = new BigNumber(supplyBalance).div(
-        new BigNumber(10).pow(tokenDecimal)
-      );
-
-      // borrow balance
-      const borrowBalance = await methods.call(
-        vBepContract.methods.borrowBalanceCurrent,
-        [accountAddress]
-      );
-      asset.borrowBalance = new BigNumber(borrowBalance).div(
-        new BigNumber(10).pow(tokenDecimal)
-      );
-
-      // percent of limit
-      asset.percentOfLimit = new BigNumber(settings.totalBorrowLimit).isZero()
-        ? '0'
-        : asset.borrowBalance
-            .times(asset.tokenPrice)
-            .div(settings.totalBorrowLimit)
-            .times(100)
-            .dp(0, 1)
-            .toString(10);
-
-      // hypotheticalLiquidity
-      const totalBalance = await methods.call(vBepContract.methods.balanceOf, [
+      // minted vai amount
+      let vaiMinted = await methods.call(appContract.methods.mintedVAIs, [
         accountAddress
       ]);
-      asset.hypotheticalLiquidity = await methods.call(
-        appContract.methods.getHypotheticalAccountLiquidity,
-        [accountAddress, asset.vtokenAddress, totalBalance, 0]
-      );
+      vaiMinted = new BigNumber(vaiMinted).div(new BigNumber(10).pow(18));
 
-      assetList.push(asset);
-
-      const supplyBalanceUSD = asset.supplyBalance.times(asset.tokenPrice);
-      const borrowBalanceUSD = asset.borrowBalance.times(asset.tokenPrice);
-
-      totalSupplyBalance = totalSupplyBalance.plus(supplyBalanceUSD);
-      totalBorrowBalance = totalBorrowBalance.plus(borrowBalanceUSD);
-
-      if (asset.collateral) {
-        totalBorrowLimit = totalBorrowLimit.plus(
-          supplyBalanceUSD.times(asset.collateralFactor)
+      // VAI APY
+      let vaiAPY;
+      if (settings.dailyVenus && vaiVaultStaked) {
+        let venusVAIVaultRate = await methods.call(
+          appContract.methods.venusVAIVaultRate,
+          []
         );
+        venusVAIVaultRate = new BigNumber(venusVAIVaultRate)
+          .div(1e18)
+          .times(20 * 60 * 24);
+        const xvsMarket = settings.markets.find(
+          ele => ele.underlyingSymbol === 'XVS'
+        );
+        vaiAPY = new BigNumber(venusVAIVaultRate)
+          .times(xvsMarket.tokenPrice)
+          .times(365 * 100)
+          .div(vaiVaultStaked)
+          .dp(2, 1)
+          .toString(10);
+        setSetting({
+          vaiAPY
+        });
       }
 
-      totalLiquidity = totalLiquidity.plus(
-        new BigNumber(market.totalSupplyUsd || 0)
-      );
-    }
-    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
-      constants.CONTRACT_VAI_VAULT_ADDRESS
-    ]);
-    vaiBalance = new BigNumber(vaiBalance).div(1e18);
+      const assetsIn = await methods.call(appContract.methods.getAssetsIn, [
+        accountAddress
+      ]);
 
-    setSetting({
-      assetList,
-      vaiMinted,
-      totalLiquidity: totalLiquidity.plus(vaiBalance).toString(10),
-      totalSupplyBalance: totalSupplyBalance.toString(10),
-      totalBorrowBalance: totalBorrowBalance.plus(vaiMinted).toString(10),
-      totalBorrowLimit: totalBorrowLimit.toString(10)
-    });
+      let totalSupplyBalance = new BigNumber(0);
+      let totalBorrowBalance = new BigNumber(0);
+      let totalBorrowLimit = new BigNumber(0);
+      let totalLiquidity = new BigNumber(0);
+      
+      const assetList = await Promise.all(Object.values(constants.CONTRACT_TOKEN_ADDRESS).map(async (item, index) => {
+        if (!settings.decimals[item.id]) {
+          return;
+        }
+
+        let market = settings.markets.find(
+          ele => ele.underlyingSymbol === item.symbol
+        );
+        if (!market) market = {};
+        const asset = {
+          key: index,
+          id: item.id,
+          img: item.asset,
+          vimg: item.vasset,
+          name: market.underlyingSymbol || '',
+          symbol: market.underlyingSymbol || '',
+          tokenAddress: item.address,
+          vsymbol: market.symbol,
+          vtokenAddress: constants.CONTRACT_VBEP_ADDRESS[item.id].address,
+          supplyApy: new BigNumber(market.supplyApy || 0),
+          borrowApy: new BigNumber(market.borrowApy || 0),
+          xvsSupplyApy: new BigNumber(market.supplyVenusApy || 0),
+          xvsBorrowApy: new BigNumber(market.borrowVenusApy || 0),
+          collateralFactor: new BigNumber(market.collateralFactor || 0).div(1e18),
+          tokenPrice: new BigNumber(market.tokenPrice || 0),
+          liquidity: new BigNumber(market.liquidity || 0),
+          borrowCaps: new BigNumber(market.borrowCaps || 0),
+          totalBorrows: new BigNumber(market.totalBorrows2 || 0),
+          walletBalance: new BigNumber(0),
+          supplyBalance: new BigNumber(0),
+          borrowBalance: new BigNumber(0),
+          isEnabled: false,
+          collateral: false,
+          percentOfLimit: '0'
+        };
+
+        const tokenDecimal = settings.decimals[item.id].token;
+        const vBepContract = getVbepContract(item.id);
+        asset.collateral = assetsIn.includes(asset.vtokenAddress);
+        // wallet balance
+        if (item.id !== 'bnb') {
+          const tokenContract = getTokenContract(item.id);
+          const [walletBalance, allowBalance] = await Promise.all([
+            methods.call(tokenContract.methods.balanceOf, [accountAddress]),
+            methods.call(tokenContract.methods.allowance, [accountAddress, asset.vtokenAddress])
+          ]);
+
+          asset.walletBalance = new BigNumber(walletBalance).div(
+            new BigNumber(10).pow(tokenDecimal)
+          );
+
+          // allowance
+          asset.isEnabled = new BigNumber(allowBalance)
+            .div(new BigNumber(10).pow(tokenDecimal))
+            .isGreaterThan(asset.walletBalance);
+        } else if (window.ethereum) {
+          await window.web3.eth.getBalance(accountAddress, (err, res) => {
+            if (!err) {
+              asset.walletBalance = new BigNumber(res).div(
+                new BigNumber(10).pow(tokenDecimal)
+              );
+            }
+          });
+          asset.isEnabled = true;
+        }
+
+        const [supplyBalance, borrowBalance] = await Promise.all([
+          methods.call(vBepContract.methods.balanceOfUnderlying, [accountAddress]),
+          methods.call(vBepContract.methods.borrowBalanceCurrent, [accountAddress])
+        ])
+
+
+        // supply balance
+        asset.supplyBalance = new BigNumber(supplyBalance).div(
+          new BigNumber(10).pow(tokenDecimal)
+        );
+
+        // borrow balance
+        asset.borrowBalance = new BigNumber(borrowBalance).div(
+          new BigNumber(10).pow(tokenDecimal)
+        );
+
+        // percent of limit
+        asset.percentOfLimit = new BigNumber(settings.totalBorrowLimit).isZero()
+          ? '0'
+          : asset.borrowBalance
+              .times(asset.tokenPrice)
+              .div(settings.totalBorrowLimit)
+              .times(100)
+              .dp(0, 1)
+              .toString(10);
+
+        // hypotheticalLiquidity
+        const totalBalance = await methods.call(vBepContract.methods.balanceOf, [
+          accountAddress
+        ]);
+        asset.hypotheticalLiquidity = await methods.call(
+          appContract.methods.getHypotheticalAccountLiquidity,
+          [accountAddress, asset.vtokenAddress, totalBalance, 0]
+        );
+
+        const supplyBalanceUSD = asset.supplyBalance.times(asset.tokenPrice);
+        const borrowBalanceUSD = asset.borrowBalance.times(asset.tokenPrice);
+
+        totalSupplyBalance = totalSupplyBalance.plus(supplyBalanceUSD);
+        totalBorrowBalance = totalBorrowBalance.plus(borrowBalanceUSD);
+
+        if (asset.collateral) {
+          totalBorrowLimit = totalBorrowLimit.plus(
+            supplyBalanceUSD.times(asset.collateralFactor)
+          );
+        }
+
+        totalLiquidity = totalLiquidity.plus(
+          new BigNumber(market.totalSupplyUsd || 0)
+        );
+
+        return asset;
+      }));
+
+      let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
+        constants.CONTRACT_VAI_VAULT_ADDRESS
+      ]);
+      vaiBalance = new BigNumber(vaiBalance).div(1e18);
+  
+      setMarketInfoUpdating(false);
+  
+      setSetting({
+        assetList,
+        vaiMinted,
+        totalLiquidity: totalLiquidity.plus(vaiBalance).toString(10),
+        totalSupplyBalance: totalSupplyBalance.toString(10),
+        totalBorrowBalance: totalBorrowBalance.plus(vaiMinted).toString(10),
+        totalBorrowLimit: totalBorrowLimit.toString(10)
+      });
+    } catch (error) {
+      console.log(error);
+      setMarketInfoUpdating(false);
+    }
   };
 
   const handleAccountChange = async () => {
@@ -755,7 +755,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
   useEffect(() => {
     updateMarketInfo();
-  }, [settings.markets, settings.selectedAddress]);
+  }, [settings.markets]);
 
   useEffect(() => {
     if (!settings.selectedAddress) return;
