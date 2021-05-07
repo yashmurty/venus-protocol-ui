@@ -115,94 +115,60 @@ function Vote({ settings, getProposals, setSetting }) {
     if (!myAddress) return;
     const appContract = getComptrollerContract();
     const vaiContract = getVaiControllerContract();
-    const venusInitialIndex = await methods.call(
-      appContract.methods.venusInitialIndex,
-      []
-    );
-    let venusEarned = new BigNumber(0);
-    for (
-      let index = 0;
-      index < Object.values(constants.CONTRACT_VBEP_ADDRESS).length;
-      index += 1
-    ) {
-      const item = Object.values(constants.CONTRACT_VBEP_ADDRESS)[index];
 
+    let [venusInitialIndex, venusAccrued, venusVAIState, vaiMinterIndex, vaiMinterAmount] = await Promise.all([
+      methods.call(appContract.methods.venusInitialIndex, []),
+      methods.call(appContract.methods.venusAccrued, [myAddress]),
+      methods.call(vaiContract.methods.venusVAIState, []),
+      methods.call(vaiContract.methods.venusVAIMinterIndex, [myAddress]),
+      methods.call(appContract.methods.mintedVAIs, [myAddress]),
+    ]);
+    let venusEarned = new BigNumber(0);
+    await Promise.all(Object.values(constants.CONTRACT_VBEP_ADDRESS).map(async (item, index) => {
       const vBepContract = getVbepContract(item.id);
-      const supplyState = await methods.call(
-        appContract.methods.venusSupplyState,
-        [item.address]
-      );
+      let [supplyState, supplierIndex, supplierTokens, borrowState, borrowerIndex, borrowBalanceStored, borrowIndex] = await Promise.all([
+        methods.call(appContract.methods.venusSupplyState, [item.address]),
+        methods.call(appContract.methods.venusSupplierIndex, [item.address, myAddress]),
+        methods.call(vBepContract.methods.balanceOf, [myAddress]),
+        methods.call(appContract.methods.venusBorrowState, [item.address]),
+        methods.call(appContract.methods.venusBorrowerIndex, [item.address, myAddress]),
+        methods.call(vBepContract.methods.borrowBalanceStored, [myAddress]),
+        methods.call(vBepContract.methods.borrowIndex, []),
+      ]);
       const supplyIndex = supplyState.index;
-      let supplierIndex = await methods.call(
-        appContract.methods.venusSupplierIndex,
-        [item.address, myAddress]
-      );
       if (+supplierIndex === 0 && +supplyIndex > 0) {
         supplierIndex = venusInitialIndex;
       }
       let deltaIndex = new BigNumber(supplyIndex).minus(supplierIndex);
 
-      const supplierTokens = await methods.call(
-        vBepContract.methods.balanceOf,
-        [myAddress]
-      );
       const supplierDelta = new BigNumber(supplierTokens)
         .multipliedBy(deltaIndex)
         .dividedBy(1e36);
 
       venusEarned = venusEarned.plus(supplierDelta);
-
-      const borrowState = await methods.call(
-        appContract.methods.venusBorrowState,
-        [item.address]
-      );
-      let borrowIndex = borrowState.index;
-      const borrowerIndex = await methods.call(
-        appContract.methods.venusBorrowerIndex,
-        [item.address, myAddress]
-      );
       if (+borrowerIndex > 0) {
-        deltaIndex = new BigNumber(borrowIndex).minus(borrowerIndex);
-        const borrowBalanceStored = await methods.call(
-          vBepContract.methods.borrowBalanceStored,
-          [myAddress]
-        );
-        borrowIndex = await methods.call(vBepContract.methods.borrowIndex, []);
+        deltaIndex = new BigNumber(borrowState.index).minus(borrowerIndex);
         const borrowerAmount = new BigNumber(borrowBalanceStored)
           .multipliedBy(1e18)
           .dividedBy(borrowIndex);
         const borrowerDelta = borrowerAmount.times(deltaIndex).dividedBy(1e36);
         venusEarned = venusEarned.plus(borrowerDelta);
       }
-    }
+    }));
 
-    const venusAccrued = await methods.call(appContract.methods.venusAccrued, [
-      myAddress
-    ]);
     venusEarned = venusEarned
       .plus(venusAccrued)
       .dividedBy(1e18)
       .dp(8, 1)
       .toString(10);
 
-    const venusVAIState = await methods.call(
-      vaiContract.methods.venusVAIState,
-      []
-    );
     const vaiMintIndex = venusVAIState.index;
-    let vaiMinterIndex = await methods.call(
-      vaiContract.methods.venusVAIMinterIndex,
-      [myAddress]
-    );
     if (+vaiMinterIndex === 0 && +vaiMintIndex > 0) {
       vaiMinterIndex = venusInitialIndex;
     }
     const deltaIndex = new BigNumber(vaiMintIndex).minus(
       new BigNumber(vaiMinterIndex)
     );
-    const vaiMinterAmount = await methods.call(appContract.methods.mintedVAIs, [
-      myAddress
-    ]);
     const vaiMinterDelta = new BigNumber(vaiMinterAmount)
       .times(deltaIndex)
       .div(1e54)
