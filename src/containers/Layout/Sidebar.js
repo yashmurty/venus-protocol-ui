@@ -642,8 +642,8 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
             methods.call(vBepContract.methods.getAccountSnapshot, [accountAddress]),
             methods.call(vBepContract.methods.balanceOf, [accountAddress])
           ]);
-          borrowBalance = snapshot[0];
           supplyBalance = snapshot[1];
+          borrowBalance = snapshot[2];
           totalBalance = balance;
 
           asset.walletBalance = new BigNumber(walletBalance).div(
@@ -655,22 +655,21 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
             .div(new BigNumber(10).pow(tokenDecimal))
             .isGreaterThan(asset.walletBalance);
         } else {
-          const [snapshot, balance] = await Promise.all([
+          const [snapshot, balance, walletBalance] = await Promise.all([
             methods.call(vBepContract.methods.getAccountSnapshot, [accountAddress]),
             methods.call(vBepContract.methods.balanceOf, [accountAddress]),
-            window.ethereum && window.web3.eth.getBalance(accountAddress, (err, res) => {
-              if (!err) {
-                asset.walletBalance = new BigNumber(res).div(
-                  new BigNumber(10).pow(tokenDecimal)
-                );
-              }
-            })
+            window.ethereum && window.web3.eth.getBalance(accountAddress)
           ]);
-          borrowBalance = snapshot[0];
           supplyBalance = snapshot[1];
+          borrowBalance = snapshot[2];
           totalBalance = balance;
 
-          if (window.ethereum) asset.isEnabled = true;
+          if (window.ethereum) {
+            asset.isEnabled = true;
+            asset.walletBalance = new BigNumber(walletBalance).div(
+              new BigNumber(10).pow(tokenDecimal)
+            );
+          }
         }
 
         // supply balance
