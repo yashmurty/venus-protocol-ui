@@ -542,6 +542,13 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     }
   }, [window.ethereum, settings.selectedAddress]);
 
+  const getAccountSnapshot = (balance1, balance2, address1, address2) => {
+    return Promise.all([
+      methods.call(balance1, [address1]),
+      methods.call(balance2, address2 ? [address1, address2] : [address1])
+    ]);
+  }
+
   const updateMarketInfo = async () => {
     const accountAddress = settings.selectedAddress;
     if (!accountAddress || !settings.decimals || !settings.markets || isMarketInfoUpdating) {
@@ -630,21 +637,15 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         const tokenDecimal = settings.decimals[item.id].token;
         const vBepContract = getVbepContract(item.id);
         asset.collateral = assetsIn.includes(asset.vtokenAddress);
-
-        let borrowBalance, supplyBalance, totalBalance;
-
         // wallet balance
         if (item.id !== 'bnb') {
           const tokenContract = getTokenContract(item.id);
-          const [walletBalance, allowBalance, snapshot, balance] = await Promise.all([
-            methods.call(tokenContract.methods.balanceOf, [accountAddress]),
-            methods.call(tokenContract.methods.allowance, [accountAddress, asset.vtokenAddress]),
-            methods.call(vBepContract.methods.getAccountSnapshot, [accountAddress]),
-            methods.call(vBepContract.methods.balanceOf, [accountAddress])
-          ]);
-          borrowBalance = snapshot[0];
-          supplyBalance = snapshot[1];
-          totalBalance = balance;
+          const [walletBalance, allowBalance] = await getAccountSnapshot(
+            tokenContract.methods.balanceOf,
+            tokenContract.methods.allowance,
+            accountAddress,
+            asset.vtokenAddress
+          );
 
           asset.walletBalance = new BigNumber(walletBalance).div(
             new BigNumber(10).pow(tokenDecimal)
@@ -654,24 +655,22 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           asset.isEnabled = new BigNumber(allowBalance)
             .div(new BigNumber(10).pow(tokenDecimal))
             .isGreaterThan(asset.walletBalance);
-        } else {
-          const [snapshot, balance] = await Promise.all([
-            methods.call(vBepContract.methods.getAccountSnapshot, [accountAddress]),
-            methods.call(vBepContract.methods.balanceOf, [accountAddress]),
-            window.ethereum && window.web3.eth.getBalance(accountAddress, (err, res) => {
-              if (!err) {
-                asset.walletBalance = new BigNumber(res).div(
-                  new BigNumber(10).pow(tokenDecimal)
-                );
-              }
-            })
-          ]);
-          borrowBalance = snapshot[0];
-          supplyBalance = snapshot[1];
-          totalBalance = balance;
-
-          if (window.ethereum) asset.isEnabled = true;
+        } else if (window.ethereum) {
+          await window.web3.eth.getBalance(accountAddress, (err, res) => {
+            if (!err) {
+              asset.walletBalance = new BigNumber(res).div(
+                new BigNumber(10).pow(tokenDecimal)
+              );
+            }
+          });
+          asset.isEnabled = true;
         }
+
+        const [supplyBalance, borrowBalance, totalBalance] = await Promise.all([
+          methods.call(vBepContract.methods.balanceOfUnderlying, [accountAddress]),
+          methods.call(vBepContract.methods.borrowBalanceCurrent, [accountAddress]),
+          methods.call(vBepContract.methods.balanceOf, [accountAddress])
+        ]);
 
         // supply balance
         asset.supplyBalance = new BigNumber(supplyBalance).div(
@@ -717,9 +716,9 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
         return asset;
       }));
-      
+  
       setMarketInfoUpdating(false);
-      
+  
       setSetting({
         assetList,
         vaiMinted,
