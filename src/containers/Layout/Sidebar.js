@@ -543,6 +543,13 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     }
   }, [window.ethereum, settings.selectedAddress]);
 
+  const getAccountSnapshot = (balance1, balance2, address1, address2) => {
+    return Promise.all([
+      methods.call(balance1, [address1]),
+      methods.call(balance2, address2 ? [address1, address2] : [address1])
+    ]);
+  }
+
   const updateMarketInfo = async () => {
     const accountAddress = settings.selectedAddress;
     if (!accountAddress || !settings.decimals || !settings.markets || isMarketInfoUpdating) {
@@ -644,10 +651,12 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         // wallet balance
         if (item.id !== 'bnb') {
           const tokenContract = getTokenContract(item.id);
-          const [walletBalance, allowBalance] = await Promise.all([
-            methods.call(tokenContract.methods.balanceOf, [accountAddress]),
-            methods.call(tokenContract.methods.allowance, [accountAddress, asset.vtokenAddress])
-          ]);
+          const [walletBalance, allowBalance] = await getAccountSnapshot(
+            tokenContract.methods.balanceOf,
+            tokenContract.methods.allowance,
+            accountAddress,
+            asset.vtokenAddress
+          );
 
           asset.walletBalance = new BigNumber(walletBalance).div(
             new BigNumber(10).pow(tokenDecimal)
@@ -668,11 +677,11 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           asset.isEnabled = true;
         }
 
-        const [supplyBalance, borrowBalance] = await Promise.all([
-          methods.call(vBepContract.methods.balanceOfUnderlying, [accountAddress]),
-          methods.call(vBepContract.methods.borrowBalanceCurrent, [accountAddress])
-        ])
-
+        const [supplyBalance, borrowBalance] = await getAccountSnapshot(
+          vBepContract.methods.balanceOfUnderlying,
+          vBepContract.methods.borrowBalanceCurrent,
+          accountAddress
+        );
 
         // supply balance
         asset.supplyBalance = new BigNumber(supplyBalance).div(
