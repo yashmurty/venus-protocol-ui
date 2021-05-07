@@ -311,8 +311,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           toast.error({
             title: `You are currently visiting the Binance Testnet Smart Chain Network. Please change your metamask to access the Binance Smart Chain Main Network`
           });
-        }
-        if (netId === 56 && process.env.REACT_APP_ENV === 'dev') {
+        } else if (netId === 56 && process.env.REACT_APP_ENV === 'dev') {
           toast.error({
             title: `You are currently visiting the Binance Smart Chain Main Network. Please change your metamask to access the Binance Testnet Smart Chain Network`
           });
