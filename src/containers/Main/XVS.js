@@ -295,12 +295,12 @@ function XVS({ settings }) {
     <XVSLayout>
       <MainLayout title="User Distribution">
         <XVSWrapper>
-          {(!settings.selectedAddress || settings.accountLoading) && (
+          {(!settings.selectedAddress || settings.accountLoading || settings.wrongNetwork) && (
             <SpinnerWrapper>
               <LoadingSpinner />
             </SpinnerWrapper>
           )}
-          {settings.selectedAddress && !settings.accountLoading && (
+          {settings.selectedAddress && !settings.accountLoading && !settings.wrongNetwork && (
             <>
               <XVSInfoWrapper className="flex align-center just-between">
                 <div className="flex align-center xvs-info">

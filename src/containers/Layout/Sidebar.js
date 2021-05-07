@@ -303,7 +303,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         : +window.ethereum.chainId;
     }
     setSetting({
-      accountLoading: true
+      wrongNetwork: true
     });
     if (netId) {
       if (netId === 97 || netId === 56) {
@@ -317,7 +317,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           });
         } else {
           setSetting({
-            accountLoading: false
+            wrongNetwork: false
           });
         }
       } else {
@@ -553,44 +553,34 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     setMarketInfoUpdating(true);
 
     try {
-      // Total Vai Staked
-      let vaiVaultStaked = await methods.call(vaiContract.methods.balanceOf, [
-        constants.CONTRACT_VAI_VAULT_ADDRESS
+
+      let [vaiVaultStaked, vaiMinted, venusVAIVaultRate] = await Promise.all([
+        methods.call(vaiContract.methods.balanceOf, [constants.CONTRACT_VAI_VAULT_ADDRESS]),
+        methods.call(appContract.methods.mintedVAIs, [accountAddress]),
+        methods.call(appContract.methods.venusVAIVaultRate, [])
       ]);
-      vaiVaultStaked = new BigNumber(vaiVaultStaked)
-        .div(1e18)
-        .dp(4, 1)
-        .toString(10);
+      // Total Vai Staked
+      vaiVaultStaked = new BigNumber(vaiVaultStaked).div(1e18);
 
       // minted vai amount
-      let vaiMinted = await methods.call(appContract.methods.mintedVAIs, [
-        accountAddress
-      ]);
       vaiMinted = new BigNumber(vaiMinted).div(new BigNumber(10).pow(18));
 
+      // venus vai vault rate
+      venusVAIVaultRate = new BigNumber(venusVAIVaultRate).div(1e18).times(20 * 60 * 24);
+
       // VAI APY
-      let vaiAPY;
-      if (settings.dailyVenus && vaiVaultStaked) {
-        let venusVAIVaultRate = await methods.call(
-          appContract.methods.venusVAIVaultRate,
-          []
-        );
-        venusVAIVaultRate = new BigNumber(venusVAIVaultRate)
-          .div(1e18)
-          .times(20 * 60 * 24);
-        const xvsMarket = settings.markets.find(
-          ele => ele.underlyingSymbol === 'XVS'
-        );
-        vaiAPY = new BigNumber(venusVAIVaultRate)
-          .times(xvsMarket.tokenPrice)
-          .times(365 * 100)
-          .div(vaiVaultStaked)
-          .dp(2, 1)
-          .toString(10);
-        setSetting({
-          vaiAPY
-        });
-      }
+      const xvsMarket = settings.markets.find(
+        ele => ele.underlyingSymbol === 'XVS'
+      );
+      const vaiAPY = new BigNumber(venusVAIVaultRate)
+        .times(xvsMarket.tokenPrice)
+        .times(365 * 100)
+        .div(vaiVaultStaked)
+        .dp(2, 1)
+        .toString(10);
+      setSetting({
+        vaiAPY
+      });
 
       const assetsIn = await methods.call(appContract.methods.getAssetsIn, [
         accountAddress
@@ -727,9 +717,9 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
         return asset;
       }));
-
+      
       setMarketInfoUpdating(false);
-  
+      
       setSetting({
         assetList,
         vaiMinted,
