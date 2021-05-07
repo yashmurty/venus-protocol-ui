@@ -560,44 +560,34 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     setMarketInfoUpdating(true);
 
     try {
-      // Total Vai Staked
-      let vaiVaultStaked = await methods.call(vaiContract.methods.balanceOf, [
-        constants.CONTRACT_VAI_VAULT_ADDRESS
+
+      let [vaiVaultStaked, vaiMinted, venusVAIVaultRate] = await Promise.all([
+        methods.call(vaiContract.methods.balanceOf, [constants.CONTRACT_VAI_VAULT_ADDRESS]),
+        methods.call(appContract.methods.mintedVAIs, [accountAddress]),
+        methods.call(appContract.methods.venusVAIVaultRate, [])
       ]);
-      vaiVaultStaked = new BigNumber(vaiVaultStaked)
-        .div(1e18)
-        .dp(4, 1)
-        .toString(10);
+      // Total Vai Staked
+      vaiVaultStaked = new BigNumber(vaiVaultStaked).div(1e18);
 
       // minted vai amount
-      let vaiMinted = await methods.call(appContract.methods.mintedVAIs, [
-        accountAddress
-      ]);
       vaiMinted = new BigNumber(vaiMinted).div(new BigNumber(10).pow(18));
 
+      // venus vai vault rate
+      venusVAIVaultRate = new BigNumber(venusVAIVaultRate).div(1e18).times(20 * 60 * 24);
+
       // VAI APY
-      let vaiAPY;
-      if (settings.dailyVenus && vaiVaultStaked) {
-        let venusVAIVaultRate = await methods.call(
-          appContract.methods.venusVAIVaultRate,
-          []
-        );
-        venusVAIVaultRate = new BigNumber(venusVAIVaultRate)
-          .div(1e18)
-          .times(20 * 60 * 24);
-        const xvsMarket = settings.markets.find(
-          ele => ele.underlyingSymbol === 'XVS'
-        );
-        vaiAPY = new BigNumber(venusVAIVaultRate)
-          .times(xvsMarket.tokenPrice)
-          .times(365 * 100)
-          .div(vaiVaultStaked)
-          .dp(2, 1)
-          .toString(10);
-        setSetting({
-          vaiAPY
-        });
-      }
+      const xvsMarket = settings.markets.find(
+        ele => ele.underlyingSymbol === 'XVS'
+      );
+      const vaiAPY = new BigNumber(venusVAIVaultRate)
+        .times(xvsMarket.tokenPrice)
+        .times(365 * 100)
+        .div(vaiVaultStaked)
+        .dp(2, 1)
+        .toString(10);
+      setSetting({
+        vaiAPY
+      });
 
       const assetsIn = await methods.call(appContract.methods.getAssetsIn, [
         accountAddress
@@ -676,11 +666,11 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           asset.isEnabled = true;
         }
 
-        const [supplyBalance, borrowBalance] = await getAccountSnapshot(
-          vBepContract.methods.balanceOfUnderlying,
-          vBepContract.methods.borrowBalanceCurrent,
-          accountAddress
-        );
+        const [supplyBalance, borrowBalance, totalBalance] = await Promise.all([
+          methods.call(vBepContract.methods.balanceOfUnderlying, [accountAddress]),
+          methods.call(vBepContract.methods.borrowBalanceCurrent, [accountAddress]),
+          methods.call(vBepContract.methods.balanceOf, [accountAddress])
+        ]);
 
         // supply balance
         asset.supplyBalance = new BigNumber(supplyBalance).div(
@@ -703,9 +693,6 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
               .toString(10);
 
         // hypotheticalLiquidity
-        const totalBalance = await methods.call(vBepContract.methods.balanceOf, [
-          accountAddress
-        ]);
         asset.hypotheticalLiquidity = await methods.call(
           appContract.methods.getHypotheticalAccountLiquidity,
           [accountAddress, asset.vtokenAddress, totalBalance, 0]
@@ -729,18 +716,13 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
         return asset;
       }));
-
-      let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
-        constants.CONTRACT_VAI_VAULT_ADDRESS
-      ]);
-      vaiBalance = new BigNumber(vaiBalance).div(1e18);
   
       setMarketInfoUpdating(false);
   
       setSetting({
         assetList,
         vaiMinted,
-        totalLiquidity: totalLiquidity.plus(vaiBalance).toString(10),
+        totalLiquidity: totalLiquidity.plus(vaiVaultStaked).toString(10),
         totalSupplyBalance: totalSupplyBalance.toString(10),
         totalBorrowBalance: totalBorrowBalance.plus(vaiMinted).toString(10),
         totalBorrowLimit: totalBorrowLimit.toString(10)
