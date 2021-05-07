@@ -734,9 +734,6 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
   };
 
   const handleAccountChange = async () => {
-    setSetting({
-      accountLoading: true
-    });
     await updateMarketInfo();
     setSetting({
       accountLoading: false
