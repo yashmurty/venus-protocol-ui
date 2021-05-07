@@ -101,12 +101,12 @@ function Dashboard({ settings, setSetting }) {
   return (
     <MainLayout title="Dashboard">
       <DashboardWrapper className="flex">
-        {(!settings.selectedAddress || settings.accountLoading) && (
+        {(!settings.selectedAddress || settings.accountLoading || settings.wrongNetwork) && (
           <SpinnerWrapper>
             <LoadingSpinner />
           </SpinnerWrapper>
         )}
-        {settings.selectedAddress && !settings.accountLoading && (
+        {settings.selectedAddress && !settings.accountLoading && !settings.wrongNetwork && (
           <Row>
             <Column xs="12" sm="12" md="5">
               <Row>
