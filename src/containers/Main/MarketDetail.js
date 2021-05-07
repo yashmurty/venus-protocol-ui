@@ -209,7 +209,8 @@ function MarketDetail({ match, settings, getMarketHistory }) {
         {(!settings.selectedAddress ||
           !settings.markets ||
           !currentAsset ||
-          settings.accountLoading) && (
+          settings.accountLoading ||
+          settings.wrongNetwork) && (
           <SpinnerWrapper>
             <LoadingSpinner />
           </SpinnerWrapper>
@@ -218,7 +219,8 @@ function MarketDetail({ match, settings, getMarketHistory }) {
           settings.markets &&
           settings.decimals &&
           currentAsset &&
-          !settings.accountLoading && (
+          !settings.accountLoading &&
+          !settings.wrongNetwork && (
             <div className="flex market-detail-content">
               <div className="column1">
                 <CardWrapper>

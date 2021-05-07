@@ -303,7 +303,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         : +window.ethereum.chainId;
     }
     setSetting({
-      accountLoading: true
+      wrongNetwork: true
     });
     if (netId) {
       if (netId === 97 || netId === 56) {
@@ -317,7 +317,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           });
         } else {
           setSetting({
-            accountLoading: false
+            wrongNetwork: false
           });
         }
       } else {
