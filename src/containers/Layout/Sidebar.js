@@ -643,7 +643,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
             methods.call(vBepContract.methods.balanceOf, [accountAddress])
           ]);
           supplyBalance = new BigNumber(snapshot[1]).times(new BigNumber(snapshot[3])).div(
-            new BigNumber(10).pow(tokenDecimal)
+            new BigNumber(10).pow(18)
           );
           borrowBalance = snapshot[2];
           totalBalance = balance;
@@ -663,7 +663,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
             window.ethereum && window.web3.eth.getBalance(accountAddress)
           ]);
           supplyBalance = new BigNumber(snapshot[1]).times(new BigNumber(snapshot[3])).div(
-            new BigNumber(10).pow(tokenDecimal)
+            new BigNumber(10).pow(18)
           );
           borrowBalance = snapshot[2];
           totalBalance = balance;
