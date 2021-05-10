@@ -58,70 +58,67 @@ function Vault({ settings }) {
 
   const updateTotalInfo = async () => {
     const compContract = getComptrollerContract();
+    const vaiContract = getVaiTokenContract();
+    const xvsTokenContract = getTokenContract('xvs');
+    const tokenContract = getVaiTokenContract();
+    const vaultContract = getVaiVaultContract();
+
+    const [
+      venusVAIVaultRate,
+      vaiBalance,
+      pendingRewards,
+      availableAmount,
+      { 0: staked },
+      vaiReward,
+      allowBalance
+    ] = await Promise.all([
+      methods.call(compContract.methods.venusVAIVaultRate, []),
+      methods.call(vaiContract.methods.balanceOf, [
+        constants.CONTRACT_VAI_VAULT_ADDRESS
+      ]),
+      methods.call(xvsTokenContract.methods.balanceOf, [
+        constants.CONTRACT_VAI_VAULT_ADDRESS
+      ]),
+      methods.call(tokenContract.methods.balanceOf, [settings.selectedAddress]),
+      methods.call(vaultContract.methods.userInfo, [settings.selectedAddress]),
+      methods.call(vaultContract.methods.pendingXVS, [
+        settings.selectedAddress
+      ]),
+      methods.call(tokenContract.methods.allowance, [
+        settings.selectedAddress,
+        constants.CONTRACT_VAI_VAULT_ADDRESS
+      ])
+    ]);
 
     // total info
-    let venusVAIVaultRate = await methods.call(
-      compContract.methods.venusVAIVaultRate,
-      []
+    setEmission(
+      new BigNumber(venusVAIVaultRate)
+        .div(1e18)
+        .times(20 * 60 * 24)
+        .dp(2, 1)
+        .toString(10)
     );
-    venusVAIVaultRate = new BigNumber(venusVAIVaultRate)
-      .div(1e18)
-      .times(20 * 60 * 24);
-    setEmission(venusVAIVaultRate.dp(2, 1).toString(10));
-
-    const vaiContract = getVaiTokenContract();
-    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
-      constants.CONTRACT_VAI_VAULT_ADDRESS
-    ]);
-    vaiBalance = new BigNumber(vaiBalance)
-      .div(1e18)
-      .dp(4, 1)
-      .toString(10);
-    setTotalVaiStaked(vaiBalance);
-
-    const vaultContract = getVaiVaultContract();
-    // let amount = await methods.call(vaultContract.methods.pendingRewards, []);
-    // amount = new BigNumber(amount).div(1e18).dp(4, 1).toString(10);
-    const xvsTokenContract = getTokenContract('xvs');
-    let amount = await methods.call(xvsTokenContract.methods.balanceOf, [
-      constants.CONTRACT_VAI_VAULT_ADDRESS
-    ]);
-    amount = new BigNumber(amount)
-      .div(1e18)
-      .dp(4, 1)
-      .toString(10);
-    setPendingRewards(amount);
-
-    // user info
-    const tokenContract = getVaiTokenContract();
-    let availableAmount = await methods.call(tokenContract.methods.balanceOf, [
-      settings.selectedAddress
-    ]);
-    availableAmount = new BigNumber(availableAmount).div(1e18);
-    setAvailableVai(availableAmount);
-
-    const { 0: staked } = await methods.call(vaultContract.methods.userInfo, [
-      settings.selectedAddress
-    ]);
-    amount = new BigNumber(staked).div(1e18);
-    setVaiStaked(amount);
-
-    amount = await methods.call(vaultContract.methods.pendingXVS, [
-      settings.selectedAddress
-    ]);
-    amount = new BigNumber(amount)
-      .div(1e18)
-      .dp(4, 1)
-      .toString(10);
-    setVaiReward(amount);
-
-    // isEnabled
-    let allowBalance = await methods.call(tokenContract.methods.allowance, [
-      settings.selectedAddress,
-      constants.CONTRACT_VAI_VAULT_ADDRESS
-    ]);
-    allowBalance = new BigNumber(allowBalance).div(1e18);
-    setIsEnabled(allowBalance.gt(availableAmount));
+    setTotalVaiStaked(
+      new BigNumber(vaiBalance)
+        .div(1e18)
+        .dp(4, 1)
+        .toString(10)
+    );
+    setPendingRewards(
+      new BigNumber(pendingRewards)
+        .div(1e18)
+        .dp(4, 1)
+        .toString(10)
+    );
+    setAvailableVai(new BigNumber(availableAmount).div(1e18));
+    setVaiStaked(new BigNumber(staked).div(1e18));
+    setVaiReward(
+      new BigNumber(vaiReward)
+        .div(1e18)
+        .dp(4, 1)
+        .toString(10)
+    );
+    setIsEnabled(new BigNumber(allowBalance).div(1e18).gt(availableAmount));
   };
 
   useEffect(() => {
