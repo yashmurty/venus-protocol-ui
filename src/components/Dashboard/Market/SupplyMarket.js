@@ -32,7 +32,7 @@ function SupplyMarket({ settings, suppliedAssets, remainAssets }) {
 
   const handleToggleCollateral = r => {
     const appContract = getComptrollerContract();
-    if (r && settings.selectedAddress && r.borrowBalance.isZero()) {
+    if (r && settings.selectedAddress && (r.supplyBalance.isZero() || r.borrowBalance.isZero())) {
       if (!r.collateral) {
         setIsCollateralEnable(false);
         setIsCollateralConfirm(true);
