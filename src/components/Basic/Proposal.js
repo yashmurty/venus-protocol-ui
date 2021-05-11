@@ -239,9 +239,7 @@ function Proposal({
           )}
           {voteStatus &&
             voteStatus === 'novoted' &&
-            proposal.state === 'Active' &&
-            delegateAddress !==
-              '0x0000000000000000000000000000000000000000' && (
+            proposal.state === 'Active'&& (
               <div
                 className="flex align-center"
                 onClick={e => e.stopPropagation()}
