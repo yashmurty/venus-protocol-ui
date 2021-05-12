@@ -604,7 +604,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           symbol: market.underlyingSymbol || '',
           tokenAddress: market.underlyingAddress,
           vsymbol: market.symbol,
-          vtokenAddress: market.address,
+          vtokenAddress: constants.CONTRACT_VBEP_ADDRESS[item.id].address,
           supplyApy: new BigNumber(market.supplyApy || 0),
           borrowApy: new BigNumber(market.borrowApy || 0),
           xvsSupplyApy: new BigNumber(market.supplyVenusApy || 0),
