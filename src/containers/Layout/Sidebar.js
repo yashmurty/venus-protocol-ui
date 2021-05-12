@@ -472,8 +472,13 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
       return;
     }
 
+    const markets = Object.keys(constants.CONTRACT_VBEP_ADDRESS)
+      .map(item => res.data.markets.find(market => market.underlyingSymbol.toLowerCase() === item.toLowerCase()))
+      .filter(item => !!item)
+    ;
+
     setSetting({
-      markets: res.data.markets,
+      markets,
       dailyVenus: res.data.dailyVenus
     });
   };
