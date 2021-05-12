@@ -430,8 +430,6 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         decimals[`${item.id}`].price = 18;
       }
     });
-    decimals.mantissa = +process.env.REACT_APP_MANTISSA_DECIMALS;
-    decimals.comptroller = +process.env.REACT_APP_COMPTROLLER_DECIMALS;
     await setSetting({ decimals });
   };
 
@@ -464,10 +462,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
     // total vai minted
     const vaiContract = getVaiTokenContract();
     let tvm = await methods.call(vaiContract.methods.totalSupply, []);
-    tvm = new BigNumber(tvm).div(
-      new BigNumber(10).pow(Number(process.env.REACT_APP_VAI_DECIMALS) || 18)
-    );
-
+    tvm = new BigNumber(tvm).div(new BigNumber(10).pow(18));
     setTotalVaiMinted(tvm);
   };
 
@@ -607,7 +602,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           vimg: item.vasset,
           name: market.underlyingSymbol || '',
           symbol: market.underlyingSymbol || '',
-          tokenAddress: item.address,
+          tokenAddress: market.underlyingAddress,
           vsymbol: market.symbol,
           vtokenAddress: constants.CONTRACT_VBEP_ADDRESS[item.id].address,
           supplyApy: new BigNumber(market.supplyApy || 0),
@@ -629,7 +624,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
 
         const tokenDecimal = settings.decimals[item.id].token;
         const vBepContract = getVbepContract(item.id);
-        asset.collateral = assetsIn.includes(asset.vtokenAddress);
+        asset.collateral = assetsIn.map(item => item.toLowerCase()).includes(asset.vtokenAddress.toLowerCase());
 
         let borrowBalance, supplyBalance, totalBalance;
 

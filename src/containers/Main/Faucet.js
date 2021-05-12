@@ -108,13 +108,9 @@ function Faucet({ form, getFromFaucet }) {
             setIsLoading(false);
             let fromAddress;
             if (symbol === 'xvs') {
-              fromAddress = process.env.REACT_APP_ENV
-                ? process.env.REACT_APP_TEST_XVS_TOKEN_ADDRESS
-                : process.env.REACT_APP_MAIN_XVS_TOKEN_ADDRESS;
+              fromAddress = constants.CONTRACT_XVS_TOKEN_ADDRESS;
             } else if (symbol === 'bnb') {
-              fromAddress = process.env.REACT_APP_ENV
-                ? process.env.REACT_APP_TEST_XVS_TOKEN_ADDRESS
-                : process.env.REACT_APP_MAIN_XVS_TOKEN_ADDRESS;
+              fromAddress = constants.CONTRACT_XVS_TOKEN_ADDRESS;
             } else {
               fromAddress = constants.CONTRACT_TOKEN_ADDRESS[symbol].address;
             }
@@ -351,11 +347,7 @@ function Faucet({ form, getFromFaucet }) {
               </a>
               {`, `}
               <a
-                href={`${process.env.REACT_APP_BSC_EXPLORER}/address/${
-                  process.env.REACT_APP_ENV
-                    ? process.env.REACT_APP_TEST_XVS_TOKEN_ADDRESS
-                    : process.env.REACT_APP_MAIN_XVS_TOKEN_ADDRESS
-                }`}
+                href={`${process.env.REACT_APP_BSC_EXPLORER}/address/${constants.CONTRACT_XVS_TOKEN_ADDRESS}`}
                 target="_blank"
                 rel="noreferrer"
               >

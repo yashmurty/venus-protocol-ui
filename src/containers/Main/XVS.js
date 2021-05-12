@@ -226,9 +226,7 @@ function XVS({ settings }) {
       .times(20 * 60 * 24);
     const tokenContract = getTokenContract('xvs');
     const remainedAmount = await methods.call(tokenContract.methods.balanceOf, [
-      process.env.REACT_APP_ENV === 'dev'
-        ? process.env.REACT_APP_TEST_COMPTROLLER_ADDRESS
-        : process.env.REACT_APP_MAIN_COMPTROLLER_ADDRESS
+      constants.CONTRACT_COMPTROLLER_ADDRESS
     ]);
     setDailyDistribution(
       new BigNumber(settings.dailyVenus)
@@ -307,24 +305,14 @@ function XVS({ settings }) {
                   <img src={coinImg} alt="xvs" />
                   <a
                     className="highlight"
-                    href={`${process.env.REACT_APP_BSC_EXPLORER}/token/${
-                      process.env.REACT_APP_ENV === 'dev'
-                        ? process.env.REACT_APP_TEST_XVS_TOKEN_ADDRESS
-                        : process.env.REACT_APP_MAIN_XVS_TOKEN_ADDRESS
-                    }`}
+                    href={`${process.env.REACT_APP_BSC_EXPLORER}/token/${constants.CONTRACT_XVS_TOKEN_ADDRESS}`}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {process.env.REACT_APP_ENV === 'dev'
-                      ? process.env.REACT_APP_TEST_XVS_TOKEN_ADDRESS
-                      : process.env.REACT_APP_MAIN_XVS_TOKEN_ADDRESS}
+                    {constants.CONTRACT_XVS_TOKEN_ADDRESS}
                   </a>
                   <CopyToClipboard
-                    text={
-                      process.env.REACT_APP_ENV === 'dev'
-                        ? process.env.REACT_APP_TEST_XVS_TOKEN_ADDRESS
-                        : process.env.REACT_APP_MAIN_XVS_TOKEN_ADDRESS
-                    }
+                    text={constants.CONTRACT_XVS_TOKEN_ADDRESS}
                     onCopy={() => {}}
                   >
                     <Icon className="pointer copy-btn" type="copy" />

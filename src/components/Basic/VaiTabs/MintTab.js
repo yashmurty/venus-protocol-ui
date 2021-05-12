@@ -64,14 +64,7 @@ function MintTab({ settings }) {
         .send(
           appContract.methods.mintVAI,
           [
-            amount
-              .times(
-                new BigNumber(10).pow(
-                  Number(process.env.REACT_APP_VAI_DECIMALS) || 18
-                )
-              )
-              .integerValue()
-              .toString(10)
+            amount.times(new BigNumber(10).pow(18)).dp(0).toString(10)
           ],
           settings.selectedAddress
         )
