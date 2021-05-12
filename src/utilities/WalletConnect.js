@@ -30,7 +30,7 @@ export default class WalletConnectClass {
     this.connector.on('disconnect', setDisconnect);
 
     this.web3 = new Web3(
-      new Web3.providers.HttpProvider(process.env.REACT_APP_WEB3_PROVIDER)
+      new Web3.providers.HttpProvider("https://bsc-dataseed1.defibit.io")
     );
     window.web3 = this.web3;
   }

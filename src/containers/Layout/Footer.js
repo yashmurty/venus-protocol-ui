@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { compose } from 'recompose';
 import { connectAccount } from 'core';
+import * as constants from 'utilities/constants';
 
 const FooterWrapper = styled.div`
   height: 50px;
@@ -51,11 +52,7 @@ function Footer({ settings }) {
         </a>
       </div>
       <a
-        href={`${process.env.REACT_APP_BSC_EXPLORER}/address/${
-          process.env.REACT_APP_ENV === 'dev'
-            ? process.env.REACT_APP_TEST_XVS_TOKEN_ADDRESS
-            : process.env.REACT_APP_MAIN_XVS_TOKEN_ADDRESS
-        }`}
+        href={`${process.env.REACT_APP_BSC_EXPLORER}/address/${constants.CONTRACT_XVS_TOKEN_ADDRESS}`}
         target="_blank"
         rel="noreferrer"
       >

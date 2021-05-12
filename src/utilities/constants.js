@@ -35,6 +35,7 @@ import vfil from 'assets/img/coins/vfil.png';
 import vbeth from 'assets/img/coins/vbeth.png';
 import vada from 'assets/img/coins/vada.png';
 import vdoge from 'assets/img/coins/vdoge.png';
+import contracts from './contracts'
 
 export const NOT_INSTALLED = 'MetaMask not installed';
 export const MISSING_PROVIDER = 'Missing provider';
@@ -45,6 +46,11 @@ export const FAILED_TO_GET_WC_URI = 'Failed to get wallet connect uri';
 export const FAILED_TO_INIT_WC = 'Failed to initialize wallet connect';
 export const NOT_EXIST_WC = 'Wallet Connect doesn`t exist';
 export const INVALID_ADDRESS = 'Wallet address is not valid';
+
+export const CONTRACT_XVS_TOKEN_ADDRESS =
+  process.env.REACT_APP_ENV === 'dev'
+    ? contracts.TEST.TOKEN.xvs
+    : contracts.MAIN.TOKEN.xvs;
 
 export const CONTRACT_VAI_TOKEN_ADDRESS =
   process.env.REACT_APP_ENV === 'dev'
@@ -77,28 +83,28 @@ export const CONTRACT_TOKEN_ADDRESS =
         sxp: {
           id: 'sxp',
           symbol: 'SXP',
-          address: process.env.REACT_APP_TEST_SXP_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.sxp,
           asset: sxp,
           vasset: vsxp
         },
         usdc: {
           id: 'usdc',
           symbol: 'USDC',
-          address: process.env.REACT_APP_TEST_USDC_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.usdc,
           asset: usdc,
           vasset: vusdc
         },
         usdt: {
           id: 'usdt',
           symbol: 'USDT',
-          address: process.env.REACT_APP_TEST_USDT_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.usdt,
           asset: usdt,
           vasset: vusdt
         },
         busd: {
           id: 'busd',
           symbol: 'BUSD',
-          address: process.env.REACT_APP_TEST_BUSD_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.busd,
           asset: busd,
           vasset: vbusd
         },
@@ -111,49 +117,49 @@ export const CONTRACT_TOKEN_ADDRESS =
         xvs: {
           id: 'xvs',
           symbol: 'XVS',
-          address: process.env.REACT_APP_TEST_XVS_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.xvs,
           asset: xvs,
           vasset: vxvs
         },
         btcb: {
           id: 'btcb',
           symbol: 'BTCB',
-          address: process.env.REACT_APP_TEST_BTCB_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.btcb,
           asset: btc,
           vasset: vbtc
         },
         eth: {
           id: 'eth',
           symbol: 'ETH',
-          address: process.env.REACT_APP_TEST_ETH_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.eth,
           asset: eth,
           vasset: veth
         },
         ltc: {
           id: 'ltc',
           symbol: 'LTC',
-          address: process.env.REACT_APP_TEST_LTC_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.ltc,
           asset: ltc,
           vasset: vltc
         },
         xrp: {
           id: 'xrp',
           symbol: 'XRP',
-          address: process.env.REACT_APP_TEST_XRP_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.xrp,
           asset: xrp,
           vasset: vxrp
         },
         ada: {
           id: 'ada',
           symbol: 'ADA',
-          address: process.env.REACT_APP_TEST_ADA_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.ada,
           asset: ada,
           vasset: vada
         },
         doge: {
           id: 'doge',
           symbol: 'DOGE',
-          address: process.env.REACT_APP_TEST_DOGE_TOKEN_ADDRESS,
+          address: contracts.TEST.TOKEN.doge,
           asset: doge,
           vasset: vdoge
         }
@@ -162,28 +168,28 @@ export const CONTRACT_TOKEN_ADDRESS =
         sxp: {
           id: 'sxp',
           symbol: 'SXP',
-          address: process.env.REACT_APP_MAIN_SXP_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.sxp,
           asset: sxp,
           vasset: vsxp
         },
         usdc: {
           id: 'usdc',
           symbol: 'USDC',
-          address: process.env.REACT_APP_MAIN_USDC_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.usdc,
           asset: usdc,
           vasset: vusdc
         },
         usdt: {
           id: 'usdt',
           symbol: 'USDT',
-          address: process.env.REACT_APP_MAIN_USDT_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.usdt,
           asset: usdt,
           vasset: vusdt
         },
         busd: {
           id: 'busd',
           symbol: 'BUSD',
-          address: process.env.REACT_APP_MAIN_BUSD_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.busd,
           asset: busd,
           vasset: vbusd
         },
@@ -196,91 +202,91 @@ export const CONTRACT_TOKEN_ADDRESS =
         xvs: {
           id: 'xvs',
           symbol: 'XVS',
-          address: process.env.REACT_APP_MAIN_XVS_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.xvs,
           asset: xvs,
           vasset: vxvs
         },
         btcb: {
           id: 'btcb',
           symbol: 'BTCB',
-          address: process.env.REACT_APP_MAIN_BTCB_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.btcb,
           asset: btc,
           vasset: vbtc
         },
         eth: {
           id: 'eth',
           symbol: 'ETH',
-          address: process.env.REACT_APP_MAIN_ETH_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.eth,
           asset: eth,
           vasset: veth
         },
         ltc: {
           id: 'ltc',
           symbol: 'LTC',
-          address: process.env.REACT_APP_MAIN_LTC_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.ltc,
           asset: ltc,
           vasset: vltc
         },
         xrp: {
           id: 'xrp',
           symbol: 'XRP',
-          address: process.env.REACT_APP_MAIN_XRP_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.xrp,
           asset: xrp,
           vasset: vxrp
         },
         bch: {
           id: 'bch',
           symbol: 'BCH',
-          address: process.env.REACT_APP_MAIN_BCH_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.bch,
           asset: bch,
           vasset: vbch
         },
         dot: {
           id: 'dot',
           symbol: 'DOT',
-          address: process.env.REACT_APP_MAIN_DOT_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.dot,
           asset: dot,
           vasset: vdot
         },
         link: {
           id: 'link',
           symbol: 'LINK',
-          address: process.env.REACT_APP_MAIN_LINK_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.link,
           asset: link,
           vasset: vlink
         },
         dai: {
           id: 'dai',
           symbol: 'DAI',
-          address: process.env.REACT_APP_MAIN_DAI_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.dai,
           asset: dai,
           vasset: vdai
         },
         fil: {
           id: 'fil',
           symbol: 'FIL',
-          address: process.env.REACT_APP_MAIN_FIL_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.fil,
           asset: fil,
           vasset: vfil
         },
         beth: {
           id: 'beth',
           symbol: 'BETH',
-          address: process.env.REACT_APP_MAIN_BETH_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.beth,
           asset: beth,
           vasset: vbeth
         },
         ada: {
           id: 'ada',
           symbol: 'ADA',
-          address: process.env.REACT_APP_MAIN_ADA_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.ada,
           asset: ada,
           vasset: vada
         },
         doge: {
           id: 'doge',
           symbol: 'DOGE',
-          address: process.env.REACT_APP_MAIN_DOGE_TOKEN_ADDRESS,
+          address: contracts.MAIN.TOKEN.doge,
           asset: doge,
           vasset: vdoge
         }
@@ -342,154 +348,154 @@ export const CONTRACT_VBEP_ADDRESS =
         sxp: {
           id: 'sxp',
           symbol: 'vSXP',
-          address: process.env.REACT_APP_TEST_SXP_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.sxp,
         },
         usdc: {
           id: 'usdc',
           symbol: 'vUSDC',
-          address: process.env.REACT_APP_TEST_USDC_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.usdc,
         },
         usdt: {
           id: 'usdt',
           symbol: 'vUSDT',
-          address: process.env.REACT_APP_TEST_USDT_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.usdt,
         },
         busd: {
           id: 'busd',
           symbol: 'vBUSD',
-          address: process.env.REACT_APP_TEST_BUSD_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.busd,
         },
         bnb: {
           id: 'bnb',
           symbol: 'vBNB',
-          address: process.env.REACT_APP_TEST_BNB_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.bnb,
         },
         xvs: {
           id: 'xvs',
           symbol: 'vXVS',
-          address: process.env.REACT_APP_TEST_XVS_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.xvs
         },
         btcb: {
           id: 'btcb',
           symbol: 'vBTC',
-          address: process.env.REACT_APP_TEST_BTCB_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.btcb,
         },
         eth: {
           id: 'eth',
           symbol: 'vETH',
-          address: process.env.REACT_APP_TEST_ETH_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.eth,
         },
         ltc: {
           id: 'ltc',
           symbol: 'vLTC',
-          address: process.env.REACT_APP_TEST_LTC_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.ltc,
         },
         xrp: {
           id: 'xrp',
           symbol: 'vXRP',
-          address: process.env.REACT_APP_TEST_XRP_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.xrp,
         },
         ada: {
           id: 'ada',
           symbol: 'vADA',
-          address: process.env.REACT_APP_TEST_ADA_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.ada,
         },
         doge: {
           id: 'doge',
           symbol: 'vDOGE',
-          address: process.env.REACT_APP_TEST_DOGE_VBEP_ADDRESS
+          address: contracts.TEST.VBEP.doge,
         }
       }
     : {
         sxp: {
           id: 'sxp',
           symbol: 'vSXP',
-          address: process.env.REACT_APP_MAIN_SXP_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.sxp,
         },
         usdc: {
           id: 'usdc',
           symbol: 'vUSDC',
-          address: process.env.REACT_APP_MAIN_USDC_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.usdc,
         },
         usdt: {
           id: 'usdt',
           symbol: 'vUSDT',
-          address: process.env.REACT_APP_MAIN_USDT_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.usdt,
         },
         busd: {
           id: 'busd',
           symbol: 'vBUSD',
-          address: process.env.REACT_APP_MAIN_BUSD_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.busd,
         },
         bnb: {
           id: 'bnb',
           symbol: 'vBNB',
-          address: process.env.REACT_APP_MAIN_BNB_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.bnb,
         },
         xvs: {
           id: 'xvs',
           symbol: 'vXVS',
-          address: process.env.REACT_APP_MAIN_XVS_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.xvs,
         },
         btcb: {
           id: 'btcb',
           symbol: 'vBTC',
-          address: process.env.REACT_APP_MAIN_BTCB_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.btcb,
         },
         eth: {
           id: 'eth',
           symbol: 'vETH',
-          address: process.env.REACT_APP_MAIN_ETH_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.eth,
         },
         ltc: {
           id: 'ltc',
           symbol: 'vLTC',
-          address: process.env.REACT_APP_MAIN_LTC_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.ltc,
         },
         xrp: {
           id: 'xrp',
           symbol: 'vXRP',
-          address: process.env.REACT_APP_MAIN_XRP_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.xrp,
         },
         bch: {
           id: 'bch',
           symbol: 'vBCH',
-          address: process.env.REACT_APP_MAIN_BCH_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.bch,
         },
         dot: {
           id: 'dot',
           symbol: 'vDOT',
-          address: process.env.REACT_APP_MAIN_DOT_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.dot,
         },
         link: {
           id: 'link',
           symbol: 'vLINK',
-          address: process.env.REACT_APP_MAIN_LINK_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.link,
         },
         dai: {
           id: 'dai',
           symbol: 'vDAI',
-          address: process.env.REACT_APP_MAIN_DAI_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.dai,
         },
         fil: {
           id: 'fil',
           symbol: 'vFIL',
-          address: process.env.REACT_APP_MAIN_FIL_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.fil,
         },
         beth: {
           id: 'beth',
           symbol: 'vBETH',
-          address: process.env.REACT_APP_MAIN_BETH_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.beth,
         },
         ada: {
           id: 'ada',
           symbol: 'vADA',
-          address: process.env.REACT_APP_MAIN_ADA_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.ada,
         },
         doge: {
           id: 'doge',
           symbol: 'vDOGE',
-          address: process.env.REACT_APP_MAIN_DOGE_VBEP_ADDRESS
+          address: contracts.MAIN.VBEP.doge,
         }
       };
 export const CONTRACT_VBEP_ABI =
