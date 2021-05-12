@@ -31,6 +31,13 @@ const CircleProgressBarWrapper = styled.div`
       margin-bottom: 17px;
     }
 
+    .percent-red {
+      color: var(--color-text-red);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 17px;
+    }
+
     .label {
       color: var(--color-text-secondary);
       font-size: 15.5px;
@@ -56,7 +63,7 @@ function CircleProgressBar({ label, percent, width }) {
         showInfo={false}
       />
       <div className="circle-label">
-        <p className="percent">{percent}%</p>
+        <p className={percent < 0 ? 'percent-red' : 'percent'}>{percent}%</p>
         <p className="label">{label}</p>
       </div>
     </CircleProgressBarWrapper>

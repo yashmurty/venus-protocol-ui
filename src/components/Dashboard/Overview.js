@@ -306,7 +306,9 @@ function Overview({ settings, getMarketHistory }) {
         </div>
         <div className="historic-label">Historical rates</div>
         <div className="flex flex-column flex-end">
-          <p className={(settings.marketType || 'supply') === 'supply' ? "apy-value" : "apy-value-red"}>{currentAPY}%</p>
+          <p className={(settings.marketType || 'supply') === 'supply' || currentAPY >= 0  ? "apy-value" : "apy-value-red"}>
+            {currentAPY}%
+          </p>
           <p className="apy-label">
             {(settings.marketType || 'supply') === 'supply'
               ? 'Supply APY'
