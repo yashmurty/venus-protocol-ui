@@ -174,26 +174,6 @@ function MarketDetail({ match, settings, getMarketHistory }) {
     };
   }, [settings.selectedAddress, currentAsset, getGraphData]);
 
-  // useEffect(() => {
-  //   if (settings.assetList && settings.assetList.length > 0 && currentAsset) {
-  //     const currentMarketInfo =
-  //       settings.assetList.filter(s => s.id === currentAsset).length !== 0
-  //         ? settings.assetList.filter(s => s.id === currentAsset)[0]
-  //         : {};
-  //     const supplyApy = getBigNumber(currentMarketInfo.supplyApy);
-  //     const borrowApy = getBigNumber(currentMarketInfo.borrowApy);
-  //     const supplyApyWithXVS = supplyApy.plus(currentMarketInfo.xvsSupplyApy); // supplyApy;
-  //     const borrowApyWithXVS = getBigNumber(
-  //       currentMarketInfo.xvsBorrowApy
-  //     ).minus(borrowApy); // borrowApy;
-  //     setCurrentAPY(
-  //       marketType === 'supply'
-  //         ? supplyApyWithXVS.dp(2, 1).toString(10)
-  //         : borrowApyWithXVS.dp(2, 1).toString(10)
-  //     );
-  //   }
-  // }, [currentAsset, marketType, settings.assetList]);
-
   useEffect(() => {
     if (currentAsset) {
       getGraphData(

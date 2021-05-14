@@ -228,7 +228,7 @@ function BorrowTab({ asset, settings, changeTab, onCancel, setSetting }) {
               <span>Repay VAI Balance</span>
             </div>
             <span>
-              {getBigNumber(settings.vaiMinted)
+              {getBigNumber(settings.userVaiMinted)
                 .dp(2, 1)
                 .toString(10)}{' '}
               VAI

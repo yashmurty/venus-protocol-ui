@@ -77,7 +77,7 @@ function VaiInfo({ settings }) {
           <img src={coinImg} alt="coin" />
           <p>
             {format(
-              getBigNumber(settings.vaiBalance)
+              getBigNumber(settings.userVaiBalance)
                 .dp(2, 1)
                 .toString(10)
             )}{' '}

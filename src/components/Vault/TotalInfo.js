@@ -5,6 +5,7 @@ import { compose } from 'recompose';
 import { connectAccount } from 'core';
 import commaNumber from 'comma-number';
 import { Card } from 'components/Basic/Card';
+import BigNumber from 'bignumber.js';
 
 const TotalInfoWrapper = styled.div`
   width: 100%;
@@ -42,7 +43,7 @@ const TotalInfoWrapper = styled.div`
 
 const format = commaNumber.bindWith(',', '.');
 
-function TotalInfo({ settings, emission, totalVaiStaked, pendingRewards }) {
+function TotalInfo({ settings, emission, pendingRewards }) {
   return (
     <Card>
       <TotalInfoWrapper>
@@ -52,7 +53,7 @@ function TotalInfo({ settings, emission, totalVaiStaked, pendingRewards }) {
         </div>
         <div className="total-item">
           <div className="prop">Total VAI Staked</div>
-          <div className="value">{format(totalVaiStaked)} VAI</div>
+          <div className="value">{settings.vaultVaiStaked ? format(new BigNumber(settings.vaultVaiStaked).dp(4, 1).toString(10)) : 0} VAI</div>
         </div>
         <div className="total-item">
           <div className="prop">VAI Staking APY</div>

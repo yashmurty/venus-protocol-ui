@@ -11,8 +11,6 @@ const account = {
     latestBlockNumber: '',
     decimals: {},
     assetList: [],
-    totalLiquidity: '0',
-    totalSupplyBalance: '0',
     totalBorrowBalance: '0',
     totalBorrowLimit: '0',
     pendingInfo: {
@@ -21,6 +19,7 @@ const account = {
       amount: 0,
       symbol: ''
     },
+    vaultVaiStaked: null,
     withXVS: true,
     markets: []
   }
