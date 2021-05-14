@@ -42,7 +42,7 @@ let timeStamp = 0;
 
 function Vote({ settings, getProposals, setSetting }) {
   const [balance, setBalance] = useState(0);
-  const [votingWeight, setVotingWeight] = useState(0);
+  const [votingWeight, setVotingWeight] = useState('0');
   const [proposals, setProposals] = useState({});
   const [current, setCurrent] = useState(1);
   const [isLoadingProposal, setIsLoadingPropoasl] = useState(false);

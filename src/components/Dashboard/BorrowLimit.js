@@ -34,7 +34,7 @@ const abortController = new AbortController();
 
 function BorrowLimit({ settings }) {
   const [available, setAvailable] = useState('0');
-  const [borrowPercent, setBorrowPercent] = useState('0');
+  const [borrowPercent, setBorrowPercent] = useState(0);
 
   useEffect(() => {
     if (settings.selectedAddress) {
@@ -49,7 +49,7 @@ function BorrowLimit({ settings }) {
               .div(total)
               .times(100)
               .dp(0, 1)
-              .toString(10)
+              .toNumber()
       );
     }
     return function cleanup() {

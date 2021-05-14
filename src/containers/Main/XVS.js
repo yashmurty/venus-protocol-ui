@@ -336,7 +336,9 @@ function XVS({ settings }) {
                   <Progress
                     percent={new BigNumber(totalDistributed)
                       .dividedBy(new BigNumber(mintedAmount))
-                      .multipliedBy(100)}
+                      .multipliedBy(100)
+                      .toNumber()
+                    }
                     strokeColor="#f8b94b"
                     strokeWidth={7}
                     showInfo={false}

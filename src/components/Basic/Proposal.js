@@ -281,7 +281,7 @@ function Proposal({
 Proposal.propTypes = {
   address: PropTypes.string,
   delegateAddress: PropTypes.string.isRequired,
-  votingWeight: PropTypes.number.isRequired,
+  votingWeight: PropTypes.string.isRequired,
   proposal: PropTypes.shape({
     id: PropTypes.number,
     description: PropTypes.string,

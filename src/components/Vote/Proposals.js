@@ -152,7 +152,7 @@ function Proposals({
         setProposalThreshold(+Web3.utils.fromWei(res, 'ether'));
       });
       methods.call(voteContract.methods.proposalMaxOperations, []).then(res => {
-        setMaxOperation(res);
+        setMaxOperation(Number(res));
       });
     }
   }, [address]);
@@ -292,7 +292,7 @@ function Proposals({
 Proposals.propTypes = {
   address: PropTypes.string.isRequired,
   isLoadingProposal: PropTypes.bool.isRequired,
-  votingWeight: PropTypes.number.isRequired,
+  votingWeight: PropTypes.string.isRequired,
   settings: PropTypes.object.isRequired,
   proposals: PropTypes.array,
   pageNumber: PropTypes.number,

@@ -71,7 +71,6 @@ function TotalInfo({ settings, emission, pendingRewards }) {
 TotalInfo.propTypes = {
   settings: PropTypes.object,
   emission: PropTypes.string.isRequired,
-  totalVaiStaked: PropTypes.string.isRequired,
   pendingRewards: PropTypes.string.isRequired
 };
 
