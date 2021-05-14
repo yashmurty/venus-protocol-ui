@@ -127,7 +127,7 @@ function WalletBalance({ settings, setSetting }) {
         getBigNumber(tokenPrice)
       );
       totalSupplied = totalSupplied.plus(supplyBalanceUSD);
-      totalBorrowed = totalSupplied.plus(borrowBalanceUSD);
+      totalBorrowed = totalBorrowed.plus(borrowBalanceUSD);
 
       const supplyApyWithXVS = withXVS
         ? getBigNumber(supplyApy).plus(getBigNumber(xvsSupplyApy))
