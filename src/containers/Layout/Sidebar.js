@@ -362,10 +362,6 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
       setAwaiting(true);
     }
 
-    let tempWeb3 = null;
-    let tempAccounts = [];
-    let tempError = error;
-    let latestBlockNumber = 0;
     try {
       const isLocked = error && error.message === constants.LOCKED;
       if (!metamask || isLocked) {
@@ -375,28 +371,29 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         );
       }
 
-      tempWeb3 = await metamask.getWeb3();
-      tempAccounts = await metamask.getAccounts();
-      latestBlockNumber = await metamask.getLatestBlockNumber();
-      if (latestBlockNumber) {
-        await setSetting({ latestBlockNumber });
-      }
-      tempError = null;
-    } catch (err) {
-      tempError = err;
-      accounts = [];
-      await setSetting({ selectedAddress: null });
-    }
-    await setSetting({ selectedAddress: tempAccounts[0] });
-    accounts = tempAccounts;
-    setWeb3(tempWeb3);
-    setError(tempError);
-    setAwaiting(false);
-    if (!tempError) {
+      let [tempWeb3, tempAccounts, latestBlockNumber] = await Promise.all([
+        metamask.getWeb3(),
+        metamask.getAccounts(),
+        metamask.getLatestBlockNumber(),
+      ]);
+      accounts = tempAccounts;
+      setWeb3(tempWeb3);
+      setError(null);
+      setAwaiting(false);
+      setSetting({ 
+        selectedAddress: tempAccounts[0],
+        latestBlockNumber,
+       });
       metamaskWatcher = setTimeout(() => {
         clearTimeout(metamaskWatcher);
         handleWatch();
       }, 3000);
+    } catch (err) {
+      setSetting({ selectedAddress: null });
+      accounts = [];
+      setWeb3(null);
+      setError(err);
+      setAwaiting(false);
     }
   }, [error, web3]);
 
@@ -431,7 +428,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         decimals[`${item.id}`].price = 18;
       }
     });
-    await setSetting({ decimals });
+    setSetting({ decimals });
   };
 
   const initSettings = async () => {
