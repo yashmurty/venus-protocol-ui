@@ -22,22 +22,22 @@ const format = commaNumber.bindWith(',', '.');
 function RepayVaiTab({ settings }) {
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState(new BigNumber(0));
-  const [vaiMinted, setVaiMinted] = useState(new BigNumber(0));
+  const [userVaiMinted, setUserVaiMinted] = useState(new BigNumber(0));
   const [vaiBalance, setVaiBalance] = useState(new BigNumber(0));
 
   useEffect(() => {
-    setVaiMinted(getBigNumber(settings.vaiMinted));
-  }, [settings.vaiMinted]);
+    setUserVaiMinted(getBigNumber(settings.userVaiMinted));
+  }, [settings.userVaiMinted]);
 
   useEffect(() => {
-    setVaiBalance(getBigNumber(settings.vaiBalance));
-  }, [settings.vaiBalance]);
+    setVaiBalance(getBigNumber(settings.userVaiBalance));
+  }, [settings.userVaiBalance]);
 
   /**
    * Max amount
    */
   const handleMaxAmount = () => {
-    setAmount(BigNumber.minimum(vaiMinted, vaiBalance));
+    setAmount(BigNumber.minimum(userVaiMinted, vaiBalance));
   };
 
   /**
@@ -96,7 +96,7 @@ function RepayVaiTab({ settings }) {
   return (
     <TabSection>
       <div className="flex flex-column align-center just-center body-content repay-vai-content">
-        {settings.vaiEnabled ? (
+        {settings.userVaiEnabled ? (
           <div className="flex align-center input-wrapper">
             <NumberFormat
               autoFocus
@@ -106,7 +106,7 @@ function RepayVaiTab({ settings }) {
               }}
               isAllowed={({ value }) => {
                 return new BigNumber(value || 0).isLessThanOrEqualTo(
-                  BigNumber.minimum(vaiBalance, vaiMinted)
+                  BigNumber.minimum(vaiBalance, userVaiMinted)
                 );
               }}
               thousandSeparator
@@ -136,13 +136,13 @@ function RepayVaiTab({ settings }) {
                 <span>Balance</span>
               </div>
             </div>
-            <span>{format(vaiMinted.dp(2, 1).toString(10))} VAI</span>
+            <span>{format(userVaiMinted.dp(2, 1).toString(10))} VAI</span>
           </div>
         </div>
         {(vaiBalance.isZero() || amount.isGreaterThan(vaiBalance)) && (
           <p className="center warning-label">Your balance is not enough.</p>
         )}
-        {!settings.vaiEnabled ? (
+        {!settings.userVaiEnabled ? (
           <Button
             className="button"
             disabled={isLoading || vaiBalance.isZero()}
@@ -159,7 +159,7 @@ function RepayVaiTab({ settings }) {
               isLoading ||
               amount.isNaN() ||
               amount.isZero() ||
-              amount.isGreaterThan(vaiMinted) ||
+              amount.isGreaterThan(userVaiMinted) ||
               amount.isGreaterThan(vaiBalance)
             }
             onClick={handleRepayVAI}

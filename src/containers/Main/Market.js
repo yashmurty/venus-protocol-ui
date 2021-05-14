@@ -172,21 +172,16 @@ function Market({ history, settings }) {
       return new BigNumber(accumulator).plus(new BigNumber(market.liquidity));
     }, 0);
 
-    let vaiBalance = await methods.call(vaiContract.methods.balanceOf, [
-      constants.CONTRACT_VAI_VAULT_ADDRESS
-    ]);
-    vaiBalance = new BigNumber(vaiBalance).div(1e18);
-
     setTotalSupply(
       tempTS
-        .plus(vaiBalance)
+        .plus(settings.vaultVaiStaked)
         .dp(2, 1)
         .toString(10)
     );
     setTotalBorrow(tempTB.dp(2, 1).toString(10));
     setAvailableLiquidity(
       tempAL
-        .plus(vaiBalance)
+        .plus(settings.vaultVaiStaked)
         .dp(2, 1)
         .toString(10)
     );

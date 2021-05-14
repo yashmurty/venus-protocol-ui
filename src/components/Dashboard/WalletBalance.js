@@ -84,6 +84,9 @@ function WalletBalance({ settings, setSetting }) {
   const [netAPY, setNetAPY] = useState('0');
   const [withXVS, setWithXVS] = useState(true);
 
+  const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
+  const [totalBorrow, setTotalBorrow] = useState(new BigNumber(0));
+
   const addVAIApy = useCallback(
     async apy => {
       const vaultContract = getVaiVaultContract();
@@ -108,7 +111,7 @@ function WalletBalance({ settings, setSetting }) {
   const updateNetAPY = useCallback(async () => {
     let totalSum = new BigNumber(0);
     let totalSupplied = new BigNumber(0);
-    let totalBorrowed = new BigNumber(0);
+    let totalBorrowed = new BigNumber(settings.userVaiMinted);
     const { assetList } = settings;
     assetList.forEach(asset => {
       const {
@@ -154,6 +157,8 @@ function WalletBalance({ settings, setSetting }) {
     } else {
       apy = totalBorrowed.isZero() ? 0 : totalSum.div(totalBorrowed).times(100);
     }
+    setTotalSupply(totalSupplied);
+    setTotalBorrow(totalBorrowed);
     addVAIApy(apy);
   }, [settings.assetList, withXVS]);
 
@@ -193,9 +198,7 @@ function WalletBalance({ settings, setSetting }) {
               <p className="label">Supply Balance</p>
               <p className="value">
                 <AnimatedNumber
-                  value={getBigNumber(settings.totalSupplyBalance)
-                    .dp(2, 1)
-                    .toString(10)}
+                  value={totalSupply.dp(2, 1).toString(10)}
                   formatValue={formatValue}
                   duration={2000}
                 />
@@ -228,9 +231,7 @@ function WalletBalance({ settings, setSetting }) {
               <p className="label">Borrow Balance</p>
               <p className="value">
                 <AnimatedNumber
-                  value={getBigNumber(settings.totalBorrowBalance)
-                    .dp(2, 1)
-                    .toString(10)}
+                  value={totalBorrow.dp(2, 1).toString(10)}
                   formatValue={formatValue}
                   duration={2000}
                 />

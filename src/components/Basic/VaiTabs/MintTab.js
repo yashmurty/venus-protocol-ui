@@ -146,7 +146,7 @@ function MintTab({ settings }) {
           <span>VAI Balance</span>
           <span>
             {format(
-              getBigNumber(settings.vaiBalance)
+              getBigNumber(settings.userVaiBalance)
                 .dp(2, 1)
                 .toString(10)
             )}{' '}

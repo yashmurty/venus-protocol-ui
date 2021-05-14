@@ -58,14 +58,12 @@ function Vault({ settings }) {
 
   const updateTotalInfo = async () => {
     const compContract = getComptrollerContract();
-    const vaiContract = getVaiTokenContract();
     const xvsTokenContract = getTokenContract('xvs');
     const tokenContract = getVaiTokenContract();
     const vaultContract = getVaiVaultContract();
 
     const [
       venusVAIVaultRate,
-      vaiBalance,
       pendingRewards,
       availableAmount,
       { 0: staked },
@@ -73,9 +71,6 @@ function Vault({ settings }) {
       allowBalance
     ] = await Promise.all([
       methods.call(compContract.methods.venusVAIVaultRate, []),
-      methods.call(vaiContract.methods.balanceOf, [
-        constants.CONTRACT_VAI_VAULT_ADDRESS
-      ]),
       methods.call(xvsTokenContract.methods.balanceOf, [
         constants.CONTRACT_VAI_VAULT_ADDRESS
       ]),
@@ -96,12 +91,6 @@ function Vault({ settings }) {
         .div(1e18)
         .times(20 * 60 * 24)
         .dp(2, 1)
-        .toString(10)
-    );
-    setTotalVaiStaked(
-      new BigNumber(vaiBalance)
-        .div(1e18)
-        .dp(4, 1)
         .toString(10)
     );
     setPendingRewards(
@@ -140,7 +129,6 @@ function Vault({ settings }) {
               <Column xs="12">
                 <TotalInfo
                   emission={emission}
-                  totalVaiStaked={totalVaiStaked}
                   pendingRewards={pendingRewards}
                 />
               </Column>
