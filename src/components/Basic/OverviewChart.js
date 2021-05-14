@@ -51,18 +51,14 @@ function OverviewChart({ marketType, graphType, data }) {
     setActiveIndex(-1);
   }, [marketType]);
 
-  const CustomizedAxisTick = ({ x, y }) => {
+  const CustomizedAxisTick = () => {
     return (
-      <g transform={`translate(${x},${y})`}>
+      <g>
         <text x={0} y={0} dy={16}>
           {/* {moment(payload.value).format('LLLL')} */}
         </text>
       </g>
     );
-  };
-  CustomizedAxisTick.propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired
   };
 
   const CustomChart1Tooltip = ({ active, payload, label }) => {
@@ -81,11 +77,6 @@ function OverviewChart({ marketType, graphType, data }) {
       );
     }
     return null;
-  };
-  CustomChart1Tooltip.propTypes = {
-    active: PropTypes.bool.isRequired,
-    payload: PropTypes.array.isRequired,
-    label: PropTypes.string.isRequired
   };
   const CustomChart2Tooltip = ({ active, payload }) => {
     if (active && payload && payload.length !== 0) {

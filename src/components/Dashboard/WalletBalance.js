@@ -81,7 +81,7 @@ const format = commaNumber.bindWith(',', '.');
 const abortController = new AbortController();
 
 function WalletBalance({ settings, setSetting }) {
-  const [netAPY, setNetAPY] = useState('0');
+  const [netAPY, setNetAPY] = useState(0);
   const [withXVS, setWithXVS] = useState(true);
 
   const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
@@ -95,13 +95,13 @@ function WalletBalance({ settings, setSetting }) {
       ]);
       const amount = new BigNumber(staked).div(1e18);
       if (amount.isNaN() || amount.isZero()) {
-        setNetAPY(apy.dp(2, 1).toString(10));
+        setNetAPY(apy.dp(2, 1).toNumber());
       } else {
         setNetAPY(
           apy
             .plus(settings.vaiAPY)
             .dp(2, 1)
-            .toString(10)
+            .toNumber()
         );
       }
     },

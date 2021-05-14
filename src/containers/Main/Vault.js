@@ -49,12 +49,11 @@ const SpinnerWrapper = styled.div`
 
 function Vault({ settings }) {
   const [emission, setEmission] = useState('0');
-  const [totalVaiStaked, setTotalVaiStaked] = useState('0');
   const [pendingRewards, setPendingRewards] = useState('0');
   const [availableVai, setAvailableVai] = useState(new BigNumber(0));
   const [vaiStaked, setVaiStaked] = useState(new BigNumber(0));
   const [vaiReward, setVaiReward] = useState('0');
-  const [isEnabled, setIsEnabled] = useState('0');
+  const [isEnabled, setIsEnabled] = useState(false);
 
   const updateTotalInfo = async () => {
     const compContract = getComptrollerContract();

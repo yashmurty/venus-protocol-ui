@@ -498,7 +498,7 @@ ProposalModal.propTypes = {
   visible: PropTypes.bool,
   address: PropTypes.string,
   form: PropTypes.object,
-  maxOperation: PropTypes.string,
+  maxOperation: PropTypes.number,
   onCancel: PropTypes.func,
   getProposals: PropTypes.func.isRequired
 };
