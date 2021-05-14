@@ -491,7 +491,7 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         if (checkIsValidNetwork(settings.walletType)) {
           getMarkets();
         }
-      }, 3000);
+      }, 5000);
     }
     return function cleanup() {
       abortController.abort();
