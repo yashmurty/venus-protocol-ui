@@ -17,11 +17,12 @@ import {
 import { restService } from 'utilities';
 
 export function* asyncGetMarketHistoryRequest({ payload, resolve, reject }) {
-  const { asset, type } = payload;
-
+  const { asset, limit, type } = payload;
+  let api = `/market_history/graph?asset=${asset}&type=${type}`;
+  if (limit) api += `&limit=${limit}`;
   try {
     const response = yield call(restService, {
-      api: `/market_history/graph?asset=${asset}&type=${type}`,
+      api,
       method: 'GET',
       params: {}
     });

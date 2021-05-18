@@ -126,9 +126,9 @@ function MarketDetail({ match, settings, getMarketHistory }) {
   }, [match]);
 
   const getGraphData = useCallback(
-    async (asset, type) => {
+    async (asset, type, limit) => {
       const tempData = [];
-      await promisify(getMarketHistory, { asset, type }).then(res => {
+      await promisify(getMarketHistory, { asset, type, limit }).then(res => {
         res.data.result.forEach(m => {
           tempData.push({
             createdAt: m.createdAt,
@@ -165,7 +165,8 @@ function MarketDetail({ match, settings, getMarketHistory }) {
     if (timeStamp % 60 === 0 && currentAsset) {
       getGraphData(
         constants.CONTRACT_VBEP_ADDRESS[currentAsset].address,
-        '1day'
+        '1day',
+        30 // 1 month
       );
     }
     timeStamp = Date.now();
@@ -178,7 +179,8 @@ function MarketDetail({ match, settings, getMarketHistory }) {
     if (currentAsset) {
       getGraphData(
         constants.CONTRACT_VBEP_ADDRESS[currentAsset].address,
-        '1day'
+        '1day',
+        30 // 1 month
       );
     }
   }, [currentAsset]);
