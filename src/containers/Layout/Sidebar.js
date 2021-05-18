@@ -303,9 +303,6 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
         ? +window.ethereum.networkVersion
         : +window.ethereum.chainId;
     }
-    setSetting({
-      wrongNetwork: true
-    });
     if (netId) {
       if (netId === 97 || netId === 56) {
         if (netId === 97 && process.env.REACT_APP_ENV === 'prod') {
@@ -320,12 +317,16 @@ function Sidebar({ history, settings, setSetting, getGovernanceVenus }) {
           setSetting({
             wrongNetwork: false
           });
+          return;
         }
       } else {
         toast.error({
           title: `Venus is only supported on Binance Smart Chain Network. Please confirm you installed Metamask and selected Binance Smart Chain Network`
         });
       }
+      setSetting({
+        wrongNetwork: true
+      });
     }
   };
 

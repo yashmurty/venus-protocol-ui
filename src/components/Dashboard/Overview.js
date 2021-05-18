@@ -142,9 +142,9 @@ function Overview({ settings, getMarketHistory }) {
   const [data, setData] = useState([]);
   const [marketInfo, setMarketInfo] = useState({});
   const [currentAPY, setCurrentAPY] = useState(0);
-  const getGraphData = async (asset, type) => {
+  const getGraphData = async (asset, type, limit) => {
     let tempData = [];
-    const res = await promisify(getMarketHistory, { asset, type });
+    const res = await promisify(getMarketHistory, { asset, type, limit });
     tempData = res.data.result
       .map(m => {
         return {
@@ -175,7 +175,8 @@ function Overview({ settings, getMarketHistory }) {
     if (currentAsset) {
       getGraphData(
         constants.CONTRACT_VBEP_ADDRESS[currentAsset].address,
-        process.env.REACT_APP_GRAPH_TICKER || null
+        process.env.REACT_APP_GRAPH_TICKER || null,
+        24 * 7 // 1 week
       );
     }
     return function cleanup() {
